@@ -13,7 +13,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Noir.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< HEAD
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+90a5d1c78ca7a240ff6d2c88a33111a5e1595600")]
+=======
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c631b686693c7027b33d7b67c0364ebbf93985c9")]
+>>>>>>> main
 [assembly: System.Reflection.AssemblyProductAttribute("Noir.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Noir.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
