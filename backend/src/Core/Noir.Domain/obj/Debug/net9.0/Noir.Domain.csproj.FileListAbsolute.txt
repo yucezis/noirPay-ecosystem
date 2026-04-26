@@ -1,0 +1,12 @@
+C:\all_projects\noirPay-ecosystem\backend\src\Core\Noir.Domain\bin\Debug\net9.0\Noir.Domain.deps.json
+C:\all_projects\noirPay-ecosystem\backend\src\Core\Noir.Domain\bin\Debug\net9.0\Noir.Domain.dll
+C:\all_projects\noirPay-ecosystem\backend\src\Core\Noir.Domain\bin\Debug\net9.0\Noir.Domain.pdb
+C:\all_projects\noirPay-ecosystem\backend\src\Core\Noir.Domain\obj\Debug\net9.0\Noir.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\all_projects\noirPay-ecosystem\backend\src\Core\Noir.Domain\obj\Debug\net9.0\Noir.Domain.AssemblyInfoInputs.cache
+C:\all_projects\noirPay-ecosystem\backend\src\Core\Noir.Domain\obj\Debug\net9.0\Noir.Domain.AssemblyInfo.cs
+C:\all_projects\noirPay-ecosystem\backend\src\Core\Noir.Domain\obj\Debug\net9.0\Noir.Domain.csproj.CoreCompileInputs.cache
+C:\all_projects\noirPay-ecosystem\backend\src\Core\Noir.Domain\obj\Debug\net9.0\Noir.Domain.sourcelink.json
+C:\all_projects\noirPay-ecosystem\backend\src\Core\Noir.Domain\obj\Debug\net9.0\Noir.Domain.dll
+C:\all_projects\noirPay-ecosystem\backend\src\Core\Noir.Domain\obj\Debug\net9.0\refint\Noir.Domain.dll
+C:\all_projects\noirPay-ecosystem\backend\src\Core\Noir.Domain\obj\Debug\net9.0\Noir.Domain.pdb
+C:\all_projects\noirPay-ecosystem\backend\src\Core\Noir.Domain\obj\Debug\net9.0\ref\Noir.Domain.dll

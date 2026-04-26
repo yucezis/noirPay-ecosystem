@@ -1,4 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using Noir.Infrastructure.Contexts;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// PostgreSQL bağlantısının Dependency Injection ile sisteme eklenmesi
+builder.Services.AddDbContext<NoirDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
