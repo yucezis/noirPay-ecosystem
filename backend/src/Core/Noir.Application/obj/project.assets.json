@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net9.0": {}
+    "net9.0": {
+      "Noir.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/Noir.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Noir.Domain.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Noir.Domain/1.0.0": {
+      "type": "project",
+      "path": "../Noir.Domain/Noir.Domain.csproj",
+      "msbuildProject": "../Noir.Domain/Noir.Domain.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net9.0": []
+    "net9.0": [
+      "Noir.Domain >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\Zişan Yüce\\.nuget\\packages\\": {},
@@ -38,7 +57,11 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Noir.Domain.csproj": {
+              "projectPath": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Noir.Domain.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
