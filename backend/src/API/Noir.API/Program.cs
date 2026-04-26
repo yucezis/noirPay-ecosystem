@@ -1,17 +1,30 @@
+<<<<<<< HEAD
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Noir.Application.Abstractions;
 using Noir.Infrastructure.Authentication;
+=======
+using Microsoft.EntityFrameworkCore;
+>>>>>>> main
 using Noir.Infrastructure.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
+<<<<<<< HEAD
 // --- 1. SERVÝS KAYITLARI (DEPENDENCY INJECTION) ---
 
 // API projelerinde Controller kullanacaðýmýz için bu servisi ekliyoruz
 builder.Services.AddControllers();
+=======
+// PostgreSQL baÄŸlantÄ±sÄ±nÄ±n Dependency Injection ile sisteme eklenmesi
+builder.Services.AddDbContext<NoirDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Add services to the container.
+// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+>>>>>>> main
 builder.Services.AddOpenApi();
 
 // Veritabaný Baðlantýsý (NOIR-11)

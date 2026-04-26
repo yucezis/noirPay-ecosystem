@@ -8,8 +8,11 @@
     ".NETCoreApp,Version=v9.0": {
       "Noir.API/1.0.0": {
         "dependencies": {
+<<<<<<< HEAD
           "BCrypt.Net-Next": "4.1.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "9.0.0",
+=======
+>>>>>>> main
           "Microsoft.AspNetCore.OpenApi": "9.0.3",
           "Microsoft.EntityFrameworkCore.Design": "9.0.0",
           "Noir.Application": "1.0.0",
@@ -19,6 +22,7 @@
           "Noir.API.dll": {}
         }
       },
+<<<<<<< HEAD
       "BCrypt.Net-Next/4.1.0": {
         "runtime": {
           "lib/netstandard2.1/BCrypt.Net-Next.dll": {
@@ -27,6 +31,8 @@
           }
         }
       },
+=======
+>>>>>>> main
       "Humanizer.Core/2.14.1": {
         "runtime": {
           "lib/net6.0/Humanizer.dll": {
@@ -35,6 +41,7 @@
           }
         }
       },
+<<<<<<< HEAD
       "Microsoft.AspNetCore.Authentication.JwtBearer/9.0.0": {
         "dependencies": {
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "8.0.1"
@@ -46,6 +53,8 @@
           }
         }
       },
+=======
+>>>>>>> main
       "Microsoft.AspNetCore.OpenApi/9.0.3": {
         "dependencies": {
           "Microsoft.OpenApi": "1.6.17"
@@ -465,6 +474,7 @@
         }
       },
       "Microsoft.Extensions.Primitives/9.0.0": {},
+<<<<<<< HEAD
       "Microsoft.IdentityModel.Abstractions/8.0.1": {
         "runtime": {
           "lib/net9.0/Microsoft.IdentityModel.Abstractions.dll": {
@@ -529,6 +539,8 @@
           }
         }
       },
+=======
+>>>>>>> main
       "Microsoft.OpenApi/1.6.17": {
         "runtime": {
           "lib/netstandard2.0/Microsoft.OpenApi.dll": {
@@ -642,6 +654,7 @@
           }
         }
       },
+<<<<<<< HEAD
       "System.IdentityModel.Tokens.Jwt/8.0.1": {
         "dependencies": {
           "Microsoft.IdentityModel.JsonWebTokens": "8.0.1",
@@ -654,6 +667,8 @@
           }
         }
       },
+=======
+>>>>>>> main
       "System.IO.Pipelines/7.0.0": {},
       "System.Reflection.Metadata/7.0.0": {
         "dependencies": {
@@ -686,8 +701,12 @@
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "9.0.0",
           "Noir.Application": "1.0.0",
+<<<<<<< HEAD
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.0",
           "System.IdentityModel.Tokens.Jwt": "8.0.1"
+=======
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.0"
+>>>>>>> main
         },
         "runtime": {
           "Noir.Infrastructure.dll": {
@@ -704,6 +723,7 @@
       "serviceable": false,
       "sha512": ""
     },
+<<<<<<< HEAD
     "BCrypt.Net-Next/4.1.0": {
       "type": "package",
       "serviceable": true,
@@ -711,6 +731,8 @@
       "path": "bcrypt.net-next/4.1.0",
       "hashPath": "bcrypt.net-next.4.1.0.nupkg.sha512"
     },
+=======
+>>>>>>> main
     "Humanizer.Core/2.14.1": {
       "type": "package",
       "serviceable": true,
@@ -718,6 +740,7 @@
       "path": "humanizer.core/2.14.1",
       "hashPath": "humanizer.core.2.14.1.nupkg.sha512"
     },
+<<<<<<< HEAD
     "Microsoft.AspNetCore.Authentication.JwtBearer/9.0.0": {
       "type": "package",
       "serviceable": true,
@@ -725,6 +748,8 @@
       "path": "microsoft.aspnetcore.authentication.jwtbearer/9.0.0",
       "hashPath": "microsoft.aspnetcore.authentication.jwtbearer.9.0.0.nupkg.sha512"
     },
+=======
+>>>>>>> main
     "Microsoft.AspNetCore.OpenApi/9.0.3": {
       "type": "package",
       "serviceable": true,
@@ -900,6 +925,7 @@
       "path": "microsoft.extensions.primitives/9.0.0",
       "hashPath": "microsoft.extensions.primitives.9.0.0.nupkg.sha512"
     },
+<<<<<<< HEAD
     "Microsoft.IdentityModel.Abstractions/8.0.1": {
       "type": "package",
       "serviceable": true,
@@ -942,6 +968,8 @@
       "path": "microsoft.identitymodel.tokens/8.0.1",
       "hashPath": "microsoft.identitymodel.tokens.8.0.1.nupkg.sha512"
     },
+=======
+>>>>>>> main
     "Microsoft.OpenApi/1.6.17": {
       "type": "package",
       "serviceable": true,
@@ -1026,6 +1054,7 @@
       "path": "system.composition.typedparts/7.0.0",
       "hashPath": "system.composition.typedparts.7.0.0.nupkg.sha512"
     },
+<<<<<<< HEAD
     "System.IdentityModel.Tokens.Jwt/8.0.1": {
       "type": "package",
       "serviceable": true,
@@ -1033,6 +1062,8 @@
       "path": "system.identitymodel.tokens.jwt/8.0.1",
       "hashPath": "system.identitymodel.tokens.jwt.8.0.1.nupkg.sha512"
     },
+=======
+>>>>>>> main
     "System.IO.Pipelines/7.0.0": {
       "type": "package",
       "serviceable": true,
