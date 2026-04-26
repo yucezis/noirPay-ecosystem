@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\all_projects\\noirPay-ecosystem\\backend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\api\\noir.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|solutionrelative:src\\api\\noir.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\api\\noir.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|solutionrelative:src\\api\\noir.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -29,10 +33,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\core\\noir.domain\\entities\\appuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|solutionrelative:src\\core\\noir.domain\\entities\\appuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\api\\noir.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|solutionrelative:src\\api\\noir.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8421054C-2E27-47AD-9685-75784BB59580}|src\\Infrastructure\\Noir.Infrastructure\\Noir.Infrastructure.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\infrastructure\\noir.infrastructure\\authentication\\jwtprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -81,38 +81,36 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedHeight": 1441,
-          "SelectedChildIndex": 0,
+          "DockedHeight": 2276,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "src\\API\\Noir.API\\Controllers\\AuthController.cs",
               "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\Controllers\\AuthController.cs",
               "RelativeToolTip": "src\\API\\Noir.API\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAIwCoAAAA8AAAAAAAAAA==",
+              "ViewState": "AgIAABgAAAAAAAAAAAAywCoAAAA8AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T11:59:20.817Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-26T11:59:20.817Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Noir.API",
+              "DocumentIndex": 2,
+              "Title": "Noir.API.csproj",
               "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\Noir.API.csproj",
               "RelativeDocumentMoniker": "src\\API\\Noir.API\\Noir.API.csproj",
               "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\Noir.API.csproj",
               "RelativeToolTip": "src\\API\\Noir.API\\Noir.API.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-04-26T11:59:00.69Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-26T11:59:00.69Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "AuthReponse.cs",
               "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Application\\DTOs\\AuthReponse.cs",
               "RelativeDocumentMoniker": "src\\Core\\Noir.Application\\DTOs\\AuthReponse.cs",
@@ -120,12 +118,11 @@
               "RelativeToolTip": "src\\Core\\Noir.Application\\DTOs\\AuthReponse.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T11:56:31.399Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-26T11:56:31.399Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "LoginRequest.cs",
               "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Application\\DTOs\\LoginRequest.cs",
               "RelativeDocumentMoniker": "src\\Core\\Noir.Application\\DTOs\\LoginRequest.cs",
@@ -133,25 +130,23 @@
               "RelativeToolTip": "src\\Core\\Noir.Application\\DTOs\\LoginRequest.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T11:55:57.033Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-26T11:55:57.033Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Noir.Application",
+              "DocumentIndex": 5,
+              "Title": "Noir.Application.csproj",
               "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Application\\Noir.Application.csproj",
               "RelativeDocumentMoniker": "src\\Core\\Noir.Application\\Noir.Application.csproj",
               "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Application\\Noir.Application.csproj",
               "RelativeToolTip": "src\\Core\\Noir.Application\\Noir.Application.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-04-26T11:55:37.59Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-26T11:55:37.59Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "AppUser.cs",
               "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\AppUser.cs",
               "RelativeDocumentMoniker": "src\\Core\\Noir.Domain\\Entities\\AppUser.cs",
@@ -159,25 +154,24 @@
               "RelativeToolTip": "src\\Core\\Noir.Domain\\Entities\\AppUser.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T11:47:00.456Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-26T11:47:00.456Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\Program.cs",
               "RelativeDocumentMoniker": "src\\API\\Noir.API\\Program.cs",
               "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\Program.cs",
               "RelativeToolTip": "src\\API\\Noir.API\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADwAAAAKAAAAAAAAAA==",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAAEYAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-26T11:37:01.509Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "NoirDbContext.cs",
               "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Infrastructure\\Noir.Infrastructure\\Contexts\\NoirDbContext.cs",
               "RelativeDocumentMoniker": "src\\Infrastructure\\Noir.Infrastructure\\Contexts\\NoirDbContext.cs",
@@ -185,8 +179,7 @@
               "RelativeToolTip": "src\\Infrastructure\\Noir.Infrastructure\\Contexts\\NoirDbContext.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAABYAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T10:17:30.186Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-26T10:17:30.186Z"
             },
             {
               "$type": "Document",
@@ -198,21 +191,19 @@
               "RelativeToolTip": "src\\Infrastructure\\Noir.Infrastructure\\Authentication\\JwtProvider.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T11:28:02.809Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-26T11:28:02.809Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 9,
-              "Title": "Noir.Infrastructure",
+              "Title": "Noir.Infrastructure.csproj",
               "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Infrastructure\\Noir.Infrastructure\\Noir.Infrastructure.csproj",
               "RelativeDocumentMoniker": "src\\Infrastructure\\Noir.Infrastructure\\Noir.Infrastructure.csproj",
               "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Infrastructure\\Noir.Infrastructure\\Noir.Infrastructure.csproj",
               "RelativeToolTip": "src\\Infrastructure\\Noir.Infrastructure\\Noir.Infrastructure.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-04-26T11:27:33.208Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-26T11:27:33.208Z"
             },
             {
               "$type": "Document",
@@ -224,8 +215,7 @@
               "RelativeToolTip": "src\\Core\\Noir.Application\\Abstractions\\IJwtProvider.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T11:22:55.569Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-26T11:22:55.569Z"
             },
             {
               "$type": "Document",
@@ -314,7 +304,7 @@
           ]
         },
         {
-          "DockedHeight": 978,
+          "DockedHeight": 143,
           "SelectedChildIndex": -1,
           "Children": [
             {

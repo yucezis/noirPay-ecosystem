@@ -2,7 +2,6 @@
   "version": 3,
   "targets": {
     "net9.0": {
-<<<<<<< HEAD
       "BCrypt.Net-Next/4.1.0": {
         "type": "package",
         "compile": {
@@ -16,8 +15,6 @@
           }
         }
       },
-=======
->>>>>>> main
       "Humanizer.Core/2.14.1": {
         "type": "package",
         "compile": {
@@ -31,7 +28,6 @@
           }
         }
       },
-<<<<<<< HEAD
       "Microsoft.AspNetCore.Authentication.JwtBearer/9.0.0": {
         "type": "package",
         "dependencies": {
@@ -51,8 +47,6 @@
           "Microsoft.AspNetCore.App"
         ]
       },
-=======
->>>>>>> main
       "Microsoft.AspNetCore.OpenApi/9.0.3": {
         "type": "package",
         "dependencies": {
@@ -994,7 +988,6 @@
           "buildTransitive/net6.0/_._": {}
         }
       },
-<<<<<<< HEAD
       "System.IdentityModel.Tokens.Jwt/8.0.1": {
         "type": "package",
         "dependencies": {
@@ -1012,8 +1005,6 @@
           }
         }
       },
-=======
->>>>>>> main
       "System.IO.Pipelines/7.0.0": {
         "type": "package",
         "compile": {
@@ -1139,7 +1130,6 @@
     }
   },
   "libraries": {
-<<<<<<< HEAD
     "BCrypt.Net-Next/4.1.0": {
       "sha512": "5YT3DKllmtkyW68PjURu/V1TOe4MKiByKwsRNVcfYE1S5KuFTeozdmKzyNzolKiQF391OXCaQtINvYT3j1ERzQ==",
       "type": "package",
@@ -1169,8 +1159,6 @@
         "readme.md"
       ]
     },
-=======
->>>>>>> main
     "Humanizer.Core/2.14.1": {
       "sha512": "lQKvtaTDOXnoVJ20ibTuSIOf2i0uO0MPbDhd1jm238I+U/2ZnRENj0cktKZhtchBMtCUSRQ5v4xBCUbKNmyVMw==",
       "type": "package",
@@ -1189,7 +1177,6 @@
         "logo.png"
       ]
     },
-<<<<<<< HEAD
     "Microsoft.AspNetCore.Authentication.JwtBearer/9.0.0": {
       "sha512": "bs+1Pq3vQdS2lTyxNUd9fEhtMsq3eLUpK36k2t56iDMVrk6OrAoFtvrQrTK0Y0OetTcJrUkGU7hBlf+ORzHLqQ==",
       "type": "package",
@@ -1206,8 +1193,6 @@
         "microsoft.aspnetcore.authentication.jwtbearer.nuspec"
       ]
     },
-=======
->>>>>>> main
     "Microsoft.AspNetCore.OpenApi/9.0.3": {
       "sha512": "fKh0UyGMUE+lhbovMhh3g88b9bT+y2jfZIuJ8ljY7rcCaSJ9m2Qqqbh66oULFfzWE2BUAmimzTGcPcq3jXi/Ew==",
       "type": "package",
@@ -3038,7 +3023,6 @@
         "useSharedDesignerContext.txt"
       ]
     },
-<<<<<<< HEAD
     "System.IdentityModel.Tokens.Jwt/8.0.1": {
       "sha512": "GJw3bYkWpOgvN3tJo5X4lYUeIFA2HD293FPUhKmp7qxS+g5ywAb34Dnd3cDAFLkcMohy5XTpoaZ4uAHuw0uSPQ==",
       "type": "package",
@@ -3062,8 +3046,6 @@
         "system.identitymodel.tokens.jwt.nuspec"
       ]
     },
-=======
->>>>>>> main
     "System.IO.Pipelines/7.0.0": {
       "sha512": "jRn6JYnNPW6xgQazROBLSfpdoczRw694vO5kKvMcNnpXuolEixUyw6IBuBs2Y2mlSX/LdLvyyWmfXhaI3ND1Yg==",
       "type": "package",
@@ -3368,5 +3350,13 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }
