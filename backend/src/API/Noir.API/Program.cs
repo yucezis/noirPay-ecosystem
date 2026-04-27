@@ -9,6 +9,7 @@ using Noir.Infrastructure.Authentication;
 using Microsoft.EntityFrameworkCore;
 
 using Noir.Infrastructure.Contexts;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,22 @@ builder.Services.AddCors(options => {
 
 // API projelerinde Controller kullanacaðýmýz için bu servisi ekliyoruz
 builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+options.SwaggerDoc("v1", new OpenApiInfo
+{
+    Title = "Ürün API",
+    Version = "v1",
+    Description = "Ürün yönetimi için örnek API",
+    Contact = new OpenApiContact
+    {
+        Name = "Geliþtirici Adý",
+        Email = "gelistirici@email.com"
+    }
+});
+});
 
 // PostgreSQL baÄŸlantÄ±sÄ±nÄ±n Dependency Injection ile sisteme eklenmesi
 builder.Services.AddDbContext<NoirDbContext>(options =>
@@ -61,6 +78,12 @@ builder.Services.AddAuthorization();
 
 // --- 2. UYGULAMA YAÞAM DÖNGÜSÜ (PIPELINE) ---
 var app = builder.Build();
+
+if(app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();    
+}
 
 if (app.Environment.IsDevelopment())
 {

@@ -3,28 +3,36 @@
   "WorkspaceRootPath": "C:\\all_projects\\noirPay-ecosystem\\backend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\api\\noir.api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|solutionrelative:src\\api\\noir.api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\api\\noir.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|solutionrelative:src\\api\\noir.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\api\\noir.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|solutionrelative:src\\api\\noir.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\api\\noir.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|solutionrelative:src\\api\\noir.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\api\\noir.api\\noir.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|solutionrelative:src\\api\\noir.api\\noir.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\api\\noir.api\\controllers\\restaurantcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|solutionrelative:src\\api\\noir.api\\controllers\\restaurantcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\core\\noir.domain\\entities\\table.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|solutionrelative:src\\core\\noir.domain\\entities\\table.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\core\\noir.domain\\entities\\restaurant.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|solutionrelative:src\\core\\noir.domain\\entities\\restaurant.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{819B0894-9ACD-4BBC-ACCA-CAEBF85E7AD6}|src\\Core\\Noir.Application\\Noir.Application.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\core\\noir.application\\dtos\\createrestaurantrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{819B0894-9ACD-4BBC-ACCA-CAEBF85E7AD6}|src\\Core\\Noir.Application\\Noir.Application.csproj|solutionrelative:src\\core\\noir.application\\dtos\\createrestaurantrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{819B0894-9ACD-4BBC-ACCA-CAEBF85E7AD6}|src\\Core\\Noir.Application\\Noir.Application.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\core\\noir.application\\dtos\\authreponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{819B0894-9ACD-4BBC-ACCA-CAEBF85E7AD6}|src\\Core\\Noir.Application\\Noir.Application.csproj|solutionrelative:src\\core\\noir.application\\dtos\\authreponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{819B0894-9ACD-4BBC-ACCA-CAEBF85E7AD6}|src\\Core\\Noir.Application\\Noir.Application.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\core\\noir.application\\dtos\\loginrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{819B0894-9ACD-4BBC-ACCA-CAEBF85E7AD6}|src\\Core\\Noir.Application\\Noir.Application.csproj|solutionrelative:src\\core\\noir.application\\dtos\\loginrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{819B0894-9ACD-4BBC-ACCA-CAEBF85E7AD6}|src\\Core\\Noir.Application\\Noir.Application.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\core\\noir.application\\noir.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{819B0894-9ACD-4BBC-ACCA-CAEBF85E7AD6}|src\\Core\\Noir.Application\\Noir.Application.csproj|solutionrelative:src\\core\\noir.application\\noir.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8421054C-2E27-47AD-9685-75784BB59580}|src\\Infrastructure\\Noir.Infrastructure\\Noir.Infrastructure.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\infrastructure\\noir.infrastructure\\contexts\\noirdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -33,6 +41,26 @@
     {
       "AbsoluteMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\core\\noir.domain\\entities\\appuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|solutionrelative:src\\core\\noir.domain\\entities\\appuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\core\\noir.domain\\entities\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|solutionrelative:src\\core\\noir.domain\\entities\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\core\\noir.domain\\entities\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|solutionrelative:src\\core\\noir.domain\\entities\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\api\\noir.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6AD49C65-5B90-4770-8738-89D1938D6B10}|src\\API\\Noir.API\\Noir.API.csproj|solutionrelative:src\\api\\noir.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{819B0894-9ACD-4BBC-ACCA-CAEBF85E7AD6}|src\\Core\\Noir.Application\\Noir.Application.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\core\\noir.application\\dtos\\loginrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{819B0894-9ACD-4BBC-ACCA-CAEBF85E7AD6}|src\\Core\\Noir.Application\\Noir.Application.csproj|solutionrelative:src\\core\\noir.application\\dtos\\loginrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{819B0894-9ACD-4BBC-ACCA-CAEBF85E7AD6}|src\\Core\\Noir.Application\\Noir.Application.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\core\\noir.application\\noir.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{819B0894-9ACD-4BBC-ACCA-CAEBF85E7AD6}|src\\Core\\Noir.Application\\Noir.Application.csproj|solutionrelative:src\\core\\noir.application\\noir.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{8421054C-2E27-47AD-9685-75784BB59580}|src\\Infrastructure\\Noir.Infrastructure\\Noir.Infrastructure.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\infrastructure\\noir.infrastructure\\authentication\\jwtprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -51,28 +79,12 @@
       "RelativeMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|solutionrelative:src\\core\\noir.domain\\entities\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\core\\noir.domain\\entities\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|solutionrelative:src\\core\\noir.domain\\entities\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\core\\noir.domain\\entities\\orderitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|solutionrelative:src\\core\\noir.domain\\entities\\orderitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\core\\noir.domain\\entities\\restaurant.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|solutionrelative:src\\core\\noir.domain\\entities\\restaurant.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\core\\noir.domain\\entities\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|solutionrelative:src\\core\\noir.domain\\entities\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\core\\noir.domain\\entities\\table.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|solutionrelative:src\\core\\noir.domain\\entities\\table.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|c:\\all_projects\\noirpay-ecosystem\\backend\\src\\core\\noir.domain\\entities\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8A216D98-3E62-421D-BB3C-54B394DE2B2F}|src\\Core\\Noir.Domain\\Noir.Domain.csproj|solutionrelative:src\\core\\noir.domain\\entities\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -81,36 +93,77 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedHeight": 2276,
-          "SelectedChildIndex": 6,
+          "DockedHeight": 2513,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "src\\API\\Noir.API\\Controllers\\AuthController.cs",
-              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "src\\API\\Noir.API\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAywCoAAAA8AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T11:59:20.817Z"
+              "DocumentIndex": 0,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "src\\API\\Noir.API\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\Properties\\launchSettings.json*",
+              "RelativeToolTip": "src\\API\\Noir.API\\Properties\\launchSettings.json*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-04-27T13:40:19.216Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Noir.API.csproj",
-              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\Noir.API.csproj",
-              "RelativeDocumentMoniker": "src\\API\\Noir.API\\Noir.API.csproj",
-              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\Noir.API.csproj",
-              "RelativeToolTip": "src\\API\\Noir.API\\Noir.API.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-04-26T11:59:00.69Z"
+              "DocumentIndex": 5,
+              "Title": "Restaurant.cs",
+              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\Restaurant.cs",
+              "RelativeDocumentMoniker": "src\\Core\\Noir.Domain\\Entities\\Restaurant.cs",
+              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\Restaurant.cs",
+              "RelativeToolTip": "src\\Core\\Noir.Domain\\Entities\\Restaurant.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAwwBQAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-26T10:09:43.019Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Table.cs",
+              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\Table.cs",
+              "RelativeDocumentMoniker": "src\\Core\\Noir.Domain\\Entities\\Table.cs",
+              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\Table.cs",
+              "RelativeToolTip": "src\\Core\\Noir.Domain\\Entities\\Table.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-26T10:06:52.023Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "RestaurantController.cs",
+              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\Controllers\\RestaurantController.cs",
+              "RelativeDocumentMoniker": "src\\API\\Noir.API\\Controllers\\RestaurantController.cs",
+              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\Controllers\\RestaurantController.cs",
+              "RelativeToolTip": "src\\API\\Noir.API\\Controllers\\RestaurantController.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAAwC4AAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-27T09:59:17.957Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\appsettings.json",
+              "RelativeDocumentMoniker": "src\\API\\Noir.API\\appsettings.json",
+              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\appsettings.json",
+              "RelativeToolTip": "src\\API\\Noir.API\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-04-27T10:31:51.361Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "AuthReponse.cs",
               "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Application\\DTOs\\AuthReponse.cs",
               "RelativeDocumentMoniker": "src\\Core\\Noir.Application\\DTOs\\AuthReponse.cs",
@@ -118,11 +171,25 @@
               "RelativeToolTip": "src\\Core\\Noir.Application\\DTOs\\AuthReponse.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T11:56:31.399Z"
+              "WhenOpened": "2026-04-26T11:56:31.399Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 8,
+              "Title": "NoirDbContext.cs",
+              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Infrastructure\\Noir.Infrastructure\\Contexts\\NoirDbContext.cs",
+              "RelativeDocumentMoniker": "src\\Infrastructure\\Noir.Infrastructure\\Contexts\\NoirDbContext.cs",
+              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Infrastructure\\Noir.Infrastructure\\Contexts\\NoirDbContext.cs",
+              "RelativeToolTip": "src\\Infrastructure\\Noir.Infrastructure\\Contexts\\NoirDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAIBJwBUAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-26T10:17:30.186Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
               "Title": "LoginRequest.cs",
               "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Application\\DTOs\\LoginRequest.cs",
               "RelativeDocumentMoniker": "src\\Core\\Noir.Application\\DTOs\\LoginRequest.cs",
@@ -130,41 +197,18 @@
               "RelativeToolTip": "src\\Core\\Noir.Application\\DTOs\\LoginRequest.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T11:55:57.033Z"
+              "WhenOpened": "2026-04-26T11:55:57.033Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Noir.Application.csproj",
-              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Application\\Noir.Application.csproj",
-              "RelativeDocumentMoniker": "src\\Core\\Noir.Application\\Noir.Application.csproj",
-              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Application\\Noir.Application.csproj",
-              "RelativeToolTip": "src\\Core\\Noir.Application\\Noir.Application.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-04-26T11:55:37.59Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "AppUser.cs",
-              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\AppUser.cs",
-              "RelativeDocumentMoniker": "src\\Core\\Noir.Domain\\Entities\\AppUser.cs",
-              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\AppUser.cs",
-              "RelativeToolTip": "src\\Core\\Noir.Domain\\Entities\\AppUser.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAArAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T11:47:00.456Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\Program.cs",
               "RelativeDocumentMoniker": "src\\API\\Noir.API\\Program.cs",
               "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\Program.cs",
               "RelativeToolTip": "src\\API\\Noir.API\\Program.cs",
-              "ViewState": "AgIAACoAAAAAAAAAAAAAAEYAAAAOAAAAAAAAAA==",
+              "ViewState": "AgIAADMAAAAAAAAAAAAAwFkAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-26T11:37:01.509Z",
               "EditorCaption": ""
@@ -172,114 +216,45 @@
             {
               "$type": "Document",
               "DocumentIndex": 6,
-              "Title": "NoirDbContext.cs",
-              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Infrastructure\\Noir.Infrastructure\\Contexts\\NoirDbContext.cs",
-              "RelativeDocumentMoniker": "src\\Infrastructure\\Noir.Infrastructure\\Contexts\\NoirDbContext.cs",
-              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Infrastructure\\Noir.Infrastructure\\Contexts\\NoirDbContext.cs",
-              "RelativeToolTip": "src\\Infrastructure\\Noir.Infrastructure\\Contexts\\NoirDbContext.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABYAAAAxAAAAAAAAAA==",
+              "Title": "CreateRestaurantRequest.cs",
+              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Application\\DTOs\\CreateRestaurantRequest.cs",
+              "RelativeDocumentMoniker": "src\\Core\\Noir.Application\\DTOs\\CreateRestaurantRequest.cs",
+              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Application\\DTOs\\CreateRestaurantRequest.cs",
+              "RelativeToolTip": "src\\Core\\Noir.Application\\DTOs\\CreateRestaurantRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T10:17:30.186Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "JwtProvider.cs",
-              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Infrastructure\\Noir.Infrastructure\\Authentication\\JwtProvider.cs",
-              "RelativeDocumentMoniker": "src\\Infrastructure\\Noir.Infrastructure\\Authentication\\JwtProvider.cs",
-              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Infrastructure\\Noir.Infrastructure\\Authentication\\JwtProvider.cs",
-              "RelativeToolTip": "src\\Infrastructure\\Noir.Infrastructure\\Authentication\\JwtProvider.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAsAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T11:28:02.809Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "Noir.Infrastructure.csproj",
-              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Infrastructure\\Noir.Infrastructure\\Noir.Infrastructure.csproj",
-              "RelativeDocumentMoniker": "src\\Infrastructure\\Noir.Infrastructure\\Noir.Infrastructure.csproj",
-              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Infrastructure\\Noir.Infrastructure\\Noir.Infrastructure.csproj",
-              "RelativeToolTip": "src\\Infrastructure\\Noir.Infrastructure\\Noir.Infrastructure.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-04-26T11:27:33.208Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "IJwtProvider.cs",
-              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Application\\Abstractions\\IJwtProvider.cs",
-              "RelativeDocumentMoniker": "src\\Core\\Noir.Application\\Abstractions\\IJwtProvider.cs",
-              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Application\\Abstractions\\IJwtProvider.cs",
-              "RelativeToolTip": "src\\Core\\Noir.Application\\Abstractions\\IJwtProvider.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAUAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T11:22:55.569Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "OrderItem.cs",
-              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\OrderItem.cs",
-              "RelativeDocumentMoniker": "src\\Core\\Noir.Domain\\Entities\\OrderItem.cs",
-              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\OrderItem.cs",
-              "RelativeToolTip": "src\\Core\\Noir.Domain\\Entities\\OrderItem.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAALAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T10:11:15.217Z"
+              "WhenOpened": "2026-04-27T09:57:18.9Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 14,
-              "Title": "Restaurant.cs",
-              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\Restaurant.cs",
-              "RelativeDocumentMoniker": "src\\Core\\Noir.Domain\\Entities\\Restaurant.cs",
-              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\Restaurant.cs",
-              "RelativeToolTip": "src\\Core\\Noir.Domain\\Entities\\Restaurant.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAALAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T10:09:43.019Z"
+              "Title": "Noir.Application.csproj",
+              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Application\\Noir.Application.csproj",
+              "RelativeDocumentMoniker": "src\\Core\\Noir.Application\\Noir.Application.csproj",
+              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Application\\Noir.Application.csproj",
+              "RelativeToolTip": "src\\Core\\Noir.Application\\Noir.Application.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-04-26T11:55:37.59Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "Order.cs",
-              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\Order.cs",
-              "RelativeDocumentMoniker": "src\\Core\\Noir.Domain\\Entities\\Order.cs",
-              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\Order.cs",
-              "RelativeToolTip": "src\\Core\\Noir.Domain\\Entities\\Order.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAALAAAAAAAAAA==",
+              "DocumentIndex": 9,
+              "Title": "AppUser.cs",
+              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\AppUser.cs",
+              "RelativeDocumentMoniker": "src\\Core\\Noir.Domain\\Entities\\AppUser.cs",
+              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\AppUser.cs",
+              "RelativeToolTip": "src\\Core\\Noir.Domain\\Entities\\AppUser.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T10:08:53.34Z"
+              "WhenOpened": "2026-04-26T11:47:00.456Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "Table.cs",
-              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\Table.cs",
-              "RelativeDocumentMoniker": "src\\Core\\Noir.Domain\\Entities\\Table.cs",
-              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\Table.cs",
-              "RelativeToolTip": "src\\Core\\Noir.Domain\\Entities\\Table.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAALAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T10:06:52.023Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "Product.cs",
-              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\Product.cs",
-              "RelativeDocumentMoniker": "src\\Core\\Noir.Domain\\Entities\\Product.cs",
-              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\Product.cs",
-              "RelativeToolTip": "src\\Core\\Noir.Domain\\Entities\\Product.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAALAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T10:04:04.958Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 11,
               "Title": "Category.cs",
               "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\Category.cs",
               "RelativeDocumentMoniker": "src\\Core\\Noir.Domain\\Entities\\Category.cs",
@@ -287,11 +262,103 @@
               "RelativeToolTip": "src\\Core\\Noir.Domain\\Entities\\Category.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAALAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T10:00:54.784Z"
+              "WhenOpened": "2026-04-26T10:00:54.784Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 10,
+              "Title": "Product.cs",
+              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\Product.cs",
+              "RelativeDocumentMoniker": "src\\Core\\Noir.Domain\\Entities\\Product.cs",
+              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\Product.cs",
+              "RelativeToolTip": "src\\Core\\Noir.Domain\\Entities\\Product.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-26T10:04:04.958Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "src\\API\\Noir.API\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\API\\Noir.API\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "src\\API\\Noir.API\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAADwvyoAAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-26T11:59:20.817Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "JwtProvider.cs",
+              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Infrastructure\\Noir.Infrastructure\\Authentication\\JwtProvider.cs",
+              "RelativeDocumentMoniker": "src\\Infrastructure\\Noir.Infrastructure\\Authentication\\JwtProvider.cs",
+              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Infrastructure\\Noir.Infrastructure\\Authentication\\JwtProvider.cs",
+              "RelativeToolTip": "src\\Infrastructure\\Noir.Infrastructure\\Authentication\\JwtProvider.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-26T11:28:02.809Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Noir.Infrastructure.csproj",
+              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Infrastructure\\Noir.Infrastructure\\Noir.Infrastructure.csproj",
+              "RelativeDocumentMoniker": "src\\Infrastructure\\Noir.Infrastructure\\Noir.Infrastructure.csproj",
+              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Infrastructure\\Noir.Infrastructure\\Noir.Infrastructure.csproj",
+              "RelativeToolTip": "src\\Infrastructure\\Noir.Infrastructure\\Noir.Infrastructure.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-04-26T11:27:33.208Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "IJwtProvider.cs",
+              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Application\\Abstractions\\IJwtProvider.cs",
+              "RelativeDocumentMoniker": "src\\Core\\Noir.Application\\Abstractions\\IJwtProvider.cs",
+              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Application\\Abstractions\\IJwtProvider.cs",
+              "RelativeToolTip": "src\\Core\\Noir.Application\\Abstractions\\IJwtProvider.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-26T11:22:55.569Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "OrderItem.cs",
+              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\OrderItem.cs",
+              "RelativeDocumentMoniker": "src\\Core\\Noir.Domain\\Entities\\OrderItem.cs",
+              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\OrderItem.cs",
+              "RelativeToolTip": "src\\Core\\Noir.Domain\\Entities\\OrderItem.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-26T10:11:15.217Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Order.cs",
+              "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\Order.cs",
+              "RelativeDocumentMoniker": "src\\Core\\Noir.Domain\\Entities\\Order.cs",
+              "ToolTip": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\Order.cs",
+              "RelativeToolTip": "src\\Core\\Noir.Domain\\Entities\\Order.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-26T10:08:53.34Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
               "Title": "BaseEntity.cs",
               "DocumentMoniker": "C:\\all_projects\\noirPay-ecosystem\\backend\\src\\Core\\Noir.Domain\\Entities\\BaseEntity.cs",
               "RelativeDocumentMoniker": "src\\Core\\Noir.Domain\\Entities\\BaseEntity.cs",
@@ -299,12 +366,13 @@
               "RelativeToolTip": "src\\Core\\Noir.Domain\\Entities\\BaseEntity.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T09:36:19.855Z"
+              "WhenOpened": "2026-04-26T09:36:19.855Z",
+              "EditorCaption": ""
             }
           ]
         },
         {
-          "DockedHeight": 143,
+          "DockedHeight": 192,
           "SelectedChildIndex": -1,
           "Children": [
             {
@@ -314,7 +382,7 @@
           ]
         },
         {
-          "DockedHeight": 430,
+          "DockedHeight": 192,
           "SelectedChildIndex": -1,
           "Children": [
             {
