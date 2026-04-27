@@ -22,7 +22,6 @@ namespace Noir.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-<<<<<<< HEAD
             modelBuilder.Entity("Noir.Domain.Entities.AppUser", b =>
                 {
                     b.Property<Guid>("Id")
@@ -62,8 +61,6 @@ namespace Noir.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-=======
->>>>>>> main
             modelBuilder.Entity("Noir.Domain.Entities.Category", b =>
                 {
                     b.Property<Guid>("Id")
@@ -214,6 +211,9 @@ namespace Noir.Infrastructure.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("text");

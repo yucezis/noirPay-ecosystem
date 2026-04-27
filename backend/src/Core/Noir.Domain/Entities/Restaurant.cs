@@ -18,6 +18,8 @@ namespace Noir.Domain.Entities
 
         public bool IsActive { get; set; } = true;
 
+        public Guid OwnerId { get; set; }
+
         public ICollection<Table> Tables { get; set; } = new List<Table>();
         public ICollection<Category> Categories { get; set; } = new List<Category>();
 

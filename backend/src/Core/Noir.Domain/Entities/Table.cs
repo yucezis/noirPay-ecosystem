@@ -8,6 +8,8 @@ namespace Noir.Domain.Entities
 {
     public class Table : BaseEntity
     {
+        public string Name { get; set; } = string.Empty;
+        public bool IsActive { get; set; } = true;
         public string TableNo { get; set; } = string.Empty;
         public string QrCodeId { get; set; } = Guid.NewGuid().ToString();
 
