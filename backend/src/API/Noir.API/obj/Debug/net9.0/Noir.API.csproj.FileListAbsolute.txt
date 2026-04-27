@@ -135,7 +135,6 @@ C:\all_projects\noirPay-ecosystem\backend\src\API\Noir.API\obj\Debug\net9.0\refi
 C:\all_projects\noirPay-ecosystem\backend\src\API\Noir.API\obj\Debug\net9.0\Noir.API.pdb
 C:\all_projects\noirPay-ecosystem\backend\src\API\Noir.API\obj\Debug\net9.0\Noir.API.genruntimeconfig.cache
 C:\all_projects\noirPay-ecosystem\backend\src\API\Noir.API\obj\Debug\net9.0\ref\Noir.API.dll
-C:\all_projects\noirPay-ecosystem\backend\src\API\Noir.API\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 C:\all_projects\noirPay-ecosystem\backend\src\API\Noir.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\all_projects\noirPay-ecosystem\backend\src\API\Noir.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\all_projects\noirPay-ecosystem\backend\src\API\Noir.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
