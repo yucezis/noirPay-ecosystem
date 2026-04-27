@@ -10,6 +10,8 @@ namespace Noir.Domain.Entities
     {
         public string Name {  get; set; } = string.Empty;
 
+        public bool IsActive { get; set; }
+
         public Guid RestaurantId { get; set; }
         public Restaurant? Restaurant { get; set; }
 
