@@ -25,7 +25,7 @@ namespace Noir.API.Controllers
         {
             var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out Guid ownerId))
+            if (string.IsNullOrEmpty(userIdString) || Guid.TryParse(userIdString, out Guid ownerId))
             {
                 return Unauthorized(new {message = "Geçersiz veya eksik kimlik bilgisi"});
             }
