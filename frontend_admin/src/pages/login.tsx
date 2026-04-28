@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // 1. Yönlendirme kancası eklendi
 import { Mail, Lock, Eye, EyeOff, CreditCard, Utensils, ShoppingBag, TrendingUp } from 'lucide-react';
 import axios from 'axios';
 
-export default function App() {
+export default function LoginPage() { // 2. Fonksiyon adı App'ten LoginPage'e çevrildi
+  const navigate = useNavigate(); // 3. Yönlendirme objesi tanımlandı
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -11,7 +14,7 @@ export default function App() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post("https://localhost:7154/api/auth/login", {
+      const response = await axios.post("https://localhost:7057/api/auth/login", {
         email,
         password,
       });
@@ -20,7 +23,10 @@ export default function App() {
       localStorage.setItem("token", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
 
-      alert("NoirPay sistemine başarılı bir şekilde giriş yaptınız.");
+      // 4. Başarılı giriş sonrası yönlendirme tetiklendi
+      navigate('/');
+      window.location.reload(); 
+      
     } catch (err) {
       alert("Giriş başarısız. Lütfen bilgilerinizi kontrol edin.");
     }

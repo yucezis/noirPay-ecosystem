@@ -53,5 +53,37 @@ namespace Noir.API.Controllers
                 RefreshToken = refreshToken
             });
         }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        {
+            var isEmailTaken = await _context.Users.AnyAsync(u => u.Email == request.Email);
+            if (isEmailTaken)
+            {
+                return BadRequest(new { message = "Bu e-posta adresi zaten kullanılıyor." });
+            }
+
+            var user = new AppUser 
+            {
+                FirstName = request.FirstName, 
+                LastName = request.LastName,  
+                Email = request.Email,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
+            };
+
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+
+            var restaurant = new Restaurant
+            {
+                Name = $"{request.FirstName}'in Restoranı", 
+                OwnerId = user.Id
+            };
+
+            await _context.Restaurants.AddAsync(restaurant);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Kayıt başarıyla oluşturuldu. Artık giriş yapabilirsiniz!" });
+        }
     }
 }

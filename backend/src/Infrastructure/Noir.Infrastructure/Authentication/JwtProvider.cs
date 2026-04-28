@@ -17,9 +17,13 @@ namespace Noir.Infrastructure.Authentication
     {
         private readonly IConfiguration _configuration;
 
+        public JwtProvider(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public string GenerateToken(Guid userId, string email)
         {
-            // appsettings.json içindeki gizli bilgilerimizi okuyoruz
             var secretKey = _configuration["JwtSettings:Secret"];
             var issuer = _configuration["JwtSettings:Issuer"];
             var audience = _configuration["JwtSettings:Audience"];
