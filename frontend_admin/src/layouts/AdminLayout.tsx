@@ -16,6 +16,7 @@ const AdminLayout: React.FC = () => {
   // Menü elemanlarımızı tanımlıyoruz
   const menuItems = [
     { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
+    { path: '/categories', icon: Coffee, label: 'Kategori Yönetimi' },
     { path: '/products', icon: Coffee, label: 'Ürün Yönetimi' },
     { path: '/tables', icon: QrCode, label: 'Masa Yönetimi' },
     { path: '/orders', icon: ClipboardList, label: 'Siparişler' },

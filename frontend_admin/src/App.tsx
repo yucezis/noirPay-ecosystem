@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import AdminLayout from './components/AdminLayout';
+import AdminLayout from './layouts/AdminLayout';
 import ProductList from './pages/ProductList';
 import TableList from './pages/TableList';
-import LoginPage from './pages/login'; // Login sayfanı içeri aldık
+import LoginPage from './pages/login'; 
+import CategoryList from './pages/CategoryList';
 
 function App() {
   // Basit bir kimlik kontrolü: LocalStorage'da token var mı?
@@ -23,7 +24,7 @@ function App() {
           {/* Dashboard (Ana Sayfa) */}
           <Route index element={
             <div className="p-8">
-              <h1 className="text-2xl font-bold text-gray-900">Hoş Geldin, Doğa!</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Hoş Geldin</h1>
               <p className="text-gray-500 mt-2">NoirPay bugün harika görünüyor. İşte genel özetin...</p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
                 <div className="p-6 bg-white rounded-2xl shadow-sm border border-gray-100">
@@ -44,6 +45,7 @@ function App() {
 
           {/* Diğer sayfalarımız */}
           <Route path="products" element={<ProductList />} />
+          <Route path="categories" element={<CategoryList />} />
           <Route path="tables" element={<TableList />} />
           
           <Route path="orders" element={<div className="p-8 font-bold">Siparişler Paneli Hazırlanıyor...</div>} />
