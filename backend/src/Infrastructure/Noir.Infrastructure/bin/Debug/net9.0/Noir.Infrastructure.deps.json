@@ -10,12 +10,8 @@
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "9.0.0",
           "Noir.Application": "1.0.0",
-<<<<<<< HEAD
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.0",
           "System.IdentityModel.Tokens.Jwt": "8.0.1"
-=======
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.0"
->>>>>>> main
         },
         "runtime": {
           "Noir.Infrastructure.dll": {}
@@ -158,7 +154,6 @@
           }
         }
       },
-<<<<<<< HEAD
       "Microsoft.IdentityModel.Abstractions/8.0.1": {
         "runtime": {
           "lib/net9.0/Microsoft.IdentityModel.Abstractions.dll": {
@@ -200,8 +195,6 @@
           }
         }
       },
-=======
->>>>>>> main
       "Npgsql/9.0.0": {
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "9.0.0",
@@ -227,7 +220,6 @@
           }
         }
       },
-<<<<<<< HEAD
       "System.IdentityModel.Tokens.Jwt/8.0.1": {
         "dependencies": {
           "Microsoft.IdentityModel.JsonWebTokens": "8.0.1",
@@ -240,8 +232,6 @@
           }
         }
       },
-=======
->>>>>>> main
       "System.Text.Json/9.0.0": {},
       "Noir.Application/1.0.0": {
         "dependencies": {
@@ -361,7 +351,6 @@
       "path": "microsoft.extensions.primitives/9.0.0",
       "hashPath": "microsoft.extensions.primitives.9.0.0.nupkg.sha512"
     },
-<<<<<<< HEAD
     "Microsoft.IdentityModel.Abstractions/8.0.1": {
       "type": "package",
       "serviceable": true,
@@ -390,8 +379,6 @@
       "path": "microsoft.identitymodel.tokens/8.0.1",
       "hashPath": "microsoft.identitymodel.tokens.8.0.1.nupkg.sha512"
     },
-=======
->>>>>>> main
     "Npgsql/9.0.0": {
       "type": "package",
       "serviceable": true,
@@ -406,7 +393,6 @@
       "path": "npgsql.entityframeworkcore.postgresql/9.0.0",
       "hashPath": "npgsql.entityframeworkcore.postgresql.9.0.0.nupkg.sha512"
     },
-<<<<<<< HEAD
     "System.IdentityModel.Tokens.Jwt/8.0.1": {
       "type": "package",
       "serviceable": true,
@@ -414,8 +400,6 @@
       "path": "system.identitymodel.tokens.jwt/8.0.1",
       "hashPath": "system.identitymodel.tokens.jwt.8.0.1.nupkg.sha512"
     },
-=======
->>>>>>> main
     "System.Text.Json/9.0.0": {
       "type": "package",
       "serviceable": true,
