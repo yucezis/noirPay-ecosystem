@@ -46,7 +46,7 @@ namespace Noir.API.Controllers
             await _context.Tables.AddAsync(table);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Masa başarıyla eklendi.", table });
+            return Ok(new { message = "Masa başarıyla eklendi."});
         }
 
         [HttpGet]
