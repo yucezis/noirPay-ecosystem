@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Noir.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Noir.Application.Interfaces;
 
 namespace Noir.Infrastructure.Contexts
 {
-    public class NoirDbContext : DbContext
+    public class NoirDbContext : DbContext, INoirDbContext
     {
         public NoirDbContext(DbContextOptions<NoirDbContext> options) : base(options) 
         { 
