@@ -1,6 +1,6 @@
 import type { Product } from '../types/product';
 
-const API_URL = 'http://localhost:7057/api';
+const API_URL = 'https://localhost:7057/api';
 
 export const getProducts = async (): Promise<Product[]> => {
   const token = localStorage.getItem('token'); 

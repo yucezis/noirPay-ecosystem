@@ -1,6 +1,6 @@
 import type { Category } from '../types/category';
 
-const API_URL = 'http://localhost:7057/api';
+const API_URL = 'https://localhost:7057/api';
 
 export const getCategories = async (): Promise<Category[]> => {
   const token = localStorage.getItem('token'); 

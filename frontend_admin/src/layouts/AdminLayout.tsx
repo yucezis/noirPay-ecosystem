@@ -7,7 +7,8 @@ import {
   ClipboardList, 
   Settings, 
   LogOut,
-  Bell
+  Bell,
+  Store
 } from 'lucide-react';
 
 const AdminLayout: React.FC = () => {
@@ -16,6 +17,7 @@ const AdminLayout: React.FC = () => {
   // Menü elemanlarımızı tanımlıyoruz
   const menuItems = [
     { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
+    { path: '/add-restaurant', icon: Store, label: 'Restorant' },
     { path: '/categories', icon: Coffee, label: 'Kategori Yönetimi' },
     { path: '/products', icon: Coffee, label: 'Ürün Yönetimi' },
     { path: '/tables', icon: QrCode, label: 'Masa Yönetimi' },

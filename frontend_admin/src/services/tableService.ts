@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5047/api';
+const API_URL = 'https://localhost:5047/api';
 
 export const getTables = async () => {
   const token = localStorage.getItem('token');

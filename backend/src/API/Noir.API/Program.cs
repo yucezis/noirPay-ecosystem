@@ -24,20 +24,45 @@ builder.Services.AddCors(options => {
 // API projelerinde Controller kullanacaðýmýz için bu servisi ekliyoruz
 builder.Services.AddControllers();
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
+builder.Services.AddCors(options =>
 {
-options.SwaggerDoc("v1", new OpenApiInfo
-{
-    Title = "Ürün API",
-    Version = "v1",
-    Description = "Ürün yönetimi için örnek API",
-    Contact = new OpenApiContact
+    options.AddPolicy("AllowReactApp", policy =>
     {
-        Name = "Geliþtirici Adý",
-        Email = "gelistirici@email.com"
-    }
+        policy.WithOrigins("http://localhost:5173") 
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
 });
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "NoirPay API", Version = "v1" });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Lütfen kutucuða 'Bearer' yazýp bir boþluk býraktýktan sonra Token'ýnýzý yapýþtýrýn.\n\nÖrnek: Bearer eyJhbG..."
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
 });
 
 // PostgreSQL baÄŸlantÄ±sÄ±nÄ±n Dependency Injection ile sisteme eklenmesi
@@ -91,7 +116,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors();
+
+app.UseCors("AllowReactApp");
 
 // Güvenlik kapýlarý (Sýrasý çok kritiktir: Önce kimlik, sonra yetki)
 app.UseAuthentication();

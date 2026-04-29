@@ -4,6 +4,7 @@ import ProductList from './pages/ProductList';
 import TableList from './pages/TableList';
 import LoginPage from './pages/login'; 
 import CategoryList from './pages/CategoryList';
+import AddRestaurant from './pages/AddRestaurant';
 
 function App() {
   // Basit bir kimlik kontrolü: LocalStorage'da token var mı?
@@ -45,6 +46,7 @@ function App() {
 
           {/* Diğer sayfalarımız */}
           <Route path="products" element={<ProductList />} />
+          <Route path="add-restaurant" element={<AddRestaurant />} />
           <Route path="categories" element={<CategoryList />} />
           <Route path="tables" element={<TableList />} />
           
