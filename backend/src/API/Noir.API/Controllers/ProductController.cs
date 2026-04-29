@@ -58,14 +58,25 @@ namespace Noir.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetProducts()
+        [AllowAnonymous]
+        public async Task<IActionResult> GetProducts([FromQuery] Guid? restaurantId = null)
         {
-            var restaurant = await GetUserRestaurantAsync();
-            if (restaurant == null) return Ok(new List<object>());
+            Guid targetRestaurantId;
+
+            if (restaurantId.HasValue)
+            {
+                targetRestaurantId = restaurantId.Value;
+            }
+            else
+            {
+                var restaurant = await GetUserRestaurantAsync();
+                if (restaurant == null) return Ok(new List<object>());
+                targetRestaurantId = restaurant.Id;
+            }
 
             var product = await _context.Products
                 .Include(p => p.Category)
-                .Where(p => p.Category!.RestaurantId == restaurant.Id)
+                .Where(p => p.Category!.RestaurantId == targetRestaurantId)
                 .Select(p => new
                 {
                     Id = p.Id,

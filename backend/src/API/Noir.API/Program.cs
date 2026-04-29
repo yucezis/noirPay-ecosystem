@@ -109,7 +109,7 @@ var app = builder.Build();
 app.MapHub<OrderHub>("/orderHub");
 
 app.UseCors(policy => policy
-    .WithOrigins("http://localhost:5173") 
+    .WithOrigins("http://localhost:5175") 
     .AllowAnyMethod()
     .AllowAnyHeader()
     .AllowCredentials());

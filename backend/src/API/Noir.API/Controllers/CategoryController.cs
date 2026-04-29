@@ -52,21 +52,34 @@ namespace Noir.API.Controllers
             return StatusCode(201, new { message = "Kategori başarıyla oluşturuldu" });
         }
 
+        
         [HttpGet]
-        public async Task<IActionResult> GetCategories()
+        [AllowAnonymous]
+        public async Task<IActionResult> GetCategories([FromQuery] Guid? restaurantId = null)
         {
-            var restaurant = await GetUserRestaurantAsync();
-            if (restaurant == null) return Ok(new List<object>());
+            Guid targetRestaurantId;
+
+            if (restaurantId.HasValue)
+            {
+                targetRestaurantId = restaurantId.Value;
+            }
+            else
+            {
+                var restaurant = await GetUserRestaurantAsync();
+                if (restaurant == null) return Ok(new List<object>());
+                targetRestaurantId = restaurant.Id;
+            }
 
             var cat = await _context.Categories
-                .Where(c => c.RestaurantId == restaurant.Id ).Select(c => new
+                .Where(c => c.RestaurantId == targetRestaurantId)
+                .Select(c => new
                 {
                     c.Id,
                     c.Name,
                     c.IsActive,
                     c.CreatedTime,
-
                 }).ToListAsync();
+
             return Ok(cat);
         }
 

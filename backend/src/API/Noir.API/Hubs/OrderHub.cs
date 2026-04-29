@@ -19,7 +19,7 @@ namespace Noir.API.Hubs
             await Clients.Caller.SendAsync("Siparişiniz mutfağa iletildi");
         }
 
-        public override async  OnDisconnectedAsync(Exception? exception)
+        public override async Task OnDisconnectedAsync(Exception? exception)
         {
             await base.OnDisconnectedAsync(exception);
         }

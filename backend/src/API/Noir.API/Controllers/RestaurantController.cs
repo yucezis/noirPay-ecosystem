@@ -58,6 +58,26 @@ namespace Noir.API.Controllers
 
         }
 
+
+        [HttpGet("{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetRestaurant(Guid id)
+        {
+            var restaurant = await _context.Restaurants.FindAsync(id);
+
+            if (restaurant == null)
+            {
+                return NotFound("Restoran bulunamadı.");
+            }
+
+            return Ok(new
+            {
+                Id = restaurant.Id,
+                Name = restaurant.Name,
+                Location = restaurant.Address 
+            });
+        }
+
     }
 
 }
