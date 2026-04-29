@@ -64,10 +64,11 @@ namespace Noir.API.Controllers
             if (restaurant == null) return Ok(new List<object>());
 
             var product = await _context.Products
-                .Include(p => p.CategoryId)
+                .Include(p => p.Category)
                 .Where(p => p.Category!.RestaurantId == restaurant.Id)
                 .Select(p => new
                 {
+                    Id = p.Id,
                     p.Name,
                     p.Description,
                     p.Price,
@@ -80,7 +81,7 @@ namespace Noir.API.Controllers
             return Ok(product);
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] UpdateProductRequest request)
         {
             var restaurant = await GetUserRestaurantAsync();
