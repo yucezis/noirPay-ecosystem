@@ -14,6 +14,7 @@ namespace Noir.Domain.Entities
         // İlişki: Bu adisyon hangi masaya ait?
         public Guid TableId { get; set; }
         public Table? Table { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         // İlişki: Bu adisyonun içinde hangi kalemler var?
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
