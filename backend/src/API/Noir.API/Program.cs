@@ -5,13 +5,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Noir.Application.Abstractions;
 using Noir.Infrastructure.Authentication;
-
+using Noir.API.Hubs;
 using Microsoft.EntityFrameworkCore;
-
 using Noir.Infrastructure.Contexts;
 using Microsoft.OpenApi.Models;
 
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSignalR();
 
 // --- 1. SERVÝS KAYITLARI (DEPENDENCY INJECTION) ---
 
@@ -104,7 +106,15 @@ builder.Services.AddAuthorization();
 // --- 2. UYGULAMA YAÞAM DÖNGÜSÜ (PIPELINE) ---
 var app = builder.Build();
 
-if(app.Environment.IsDevelopment())
+app.MapHub<OrderHub>("/orderHub");
+
+app.UseCors(policy => policy
+    .WithOrigins("http://localhost:5173") 
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowCredentials());
+
+if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();    
