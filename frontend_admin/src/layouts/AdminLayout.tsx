@@ -10,6 +10,7 @@ import {
   Bell,
   Store,
   Table,
+  CheckCircle2
 } from 'lucide-react';
 
 const AdminLayout: React.FC = () => {
@@ -24,6 +25,53 @@ const AdminLayout: React.FC = () => {
     
     window.location.href = '/login'; 
   };
+
+  // BİLDİRİM STATE'LERİ
+  const [toast, setToast] = useState<{table: string, time: string} | null>(null);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // SİGNALR GLOBAL DİNLEYİCİ
+  useEffect(() => {
+    const restaurantId = localStorage.getItem('restaurantId');
+    if (!restaurantId) return;
+
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl("https://localhost:7057/orderHub")
+      .withAutomaticReconnect()
+      .build();
+
+    const startConnection = async () => {
+      try {
+        await connection.start();
+        await connection.invoke("JoinGroup", `Restorant_${restaurantId}`);
+        
+        connection.on("Yeni sipariş", (data: any) => {
+          // Bildirimi ekranda göster
+          setToast({
+            table: data.tableId || data.TableId,
+            time: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
+          });
+          
+          // Okunmamış bildirim sayısını artır
+          setUnreadCount(prev => prev + 1);
+
+          // 5 saniye sonra bildirimi ekrandan gizle
+          setTimeout(() => {
+            setToast(null);
+          }, 5000);
+        });
+
+      } catch (err) {
+        console.error("Global bildirim servisine bağlanılamadı:", err);
+      }
+    };
+
+    startConnection();
+
+    return () => {
+      connection.stop();
+    };
+  }, []);
 
   // Menü elemanlarımızı tanımlıyoruz
   const menuItems = [
@@ -91,6 +139,23 @@ const AdminLayout: React.FC = () => {
 
       {/* SAĞ TARAF (HEADER + İÇERİK ALANI) */}
       <div className="flex-1 flex flex-col relative">
+        {/* YENİ SİPARİŞ POP-UP BİLDİRİMİ */}
+        {toast && (
+          <div className="absolute top-20 right-8 bg-white border border-gray-100 p-4 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] z-50 animate-in slide-in-from-right-8 fade-in duration-300 flex items-center gap-4 min-w-[300px]">
+            <div className="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center">
+              <Bell className="w-6 h-6 text-orange-500 animate-bounce" />
+            </div>
+            <div className="flex-1">
+              <p className="font-black text-gray-900 text-sm">Yeni Sipnpariş Geldi!</p>
+              <p className="text-xs text-gray-500 font-medium mt-0.5">
+                Masa: <span className="text-orange-500 font-bold text-sm">{toast.table}</span> • {toast.time}
+              </p>
+            </div>
+            <button onClick={() => setToast(null)} className="text-gray-400 hover:text-gray-600 px-2">
+              ✕
+            </button>
+          </div>
+        )}
         
         {/* ÜST BAR (HEADER) */}
         <header className="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-8 shadow-sm z-10">
@@ -99,9 +164,17 @@ const AdminLayout: React.FC = () => {
           </div>
           
           <div className="flex items-center gap-4">
-            <button className="relative p-2 text-gray-400 hover:bg-gray-50 rounded-full transition-colors">
+            {/* Çan İkonu */}
+            <button 
+              onClick={() => setUnreadCount(0)} // Tıklayınca sayacı sıfırla
+              className="relative p-2 text-gray-400 hover:bg-gray-50 rounded-full transition-colors"
+            >
               <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+              {unreadCount > 0 && (
+                <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white animate-pulse">
+                  {unreadCount}
+                </span>
+              )}
             </button>
             <div className="h-8 w-px bg-gray-200"></div>
             <div className="flex items-center gap-3">
