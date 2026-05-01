@@ -11,6 +11,11 @@ namespace Noir.API.Hubs
             await Groups.AddToGroupAsync(Context.ConnectionId, groupId);
         }
 
+        public async Task UpdateCart(string groupId, object newCart)
+        {
+            await Clients.OthersInGroup(groupId).SendAsync("ReceiveCartUpdate", newCart);
+        }
+
         public async Task SendOrder(string restaurantId, string tableId, object orderDetails)
         {
             await Clients.Group($"Restorant_{restaurantId}")

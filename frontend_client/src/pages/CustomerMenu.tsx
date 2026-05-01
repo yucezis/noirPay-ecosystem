@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ShoppingBag, ChevronRight, Loader2, Plus, Minus } from 'lucide-react';
+import * as signalR from '@microsoft/signalr'; // 1. SignalR Eklendi
 
 const API_URL = 'https://localhost:7057/api';
+
+const HUB_URL = 'https://localhost:7057/OrderHub'; 
 
 const CustomerMenu: React.FC = () => {
   // --- API Veri State'leri ---
@@ -14,43 +17,46 @@ const CustomerMenu: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>(''); 
   const [searchQuery, setSearchQuery] = useState('');
   
-  // --- SEPET (CART) STATE'İ (NOIR-22) ---
+  // --- SEPET VE SIGNALR STATE'LERİ ---
   const [cart, setCart] = useState<any[]>([]);
+  const [connection, setConnection] = useState<signalR.HubConnection | null>(null);
 
+  // 1. DATA FETCHING (Mevcut kodun, ufak koruma kalkanıyla beraber)
   useEffect(() => {
     const fetchMenuData = async () => {
       try {
         const urlParams = new URLSearchParams(window.location.search);
         const urlRestaurantId = urlParams.get('restaurantId'); 
         
+        if (!urlRestaurantId) {
+           setRestaurant({ name: "Hata", location: "Lütfen geçerli bir QR kod okutun." });
+           setLoading(false);
+           return; 
+        }
+
         const token = localStorage.getItem('token');
         const headers = { 
           'Authorization': token ? `Bearer ${token}` : '', 
           'Content-Type': 'application/json' 
         };
 
-        const [categoryRes, productRes] = await Promise.all([
+        const [categoryRes, productRes, restRes] = await Promise.all([
           fetch(`${API_URL}/Category?restaurantId=${urlRestaurantId}`, { headers }),
-          fetch(`${API_URL}/Product?restaurantId=${urlRestaurantId}`, { headers })
+          fetch(`${API_URL}/Product?restaurantId=${urlRestaurantId}`, { headers }),
+          fetch(`${API_URL}/Restaurant/${urlRestaurantId}`, { headers })
         ]);
 
         const categoryData = await categoryRes.json();
         const productData = await productRes.json();
-
-        if (urlRestaurantId) {
-           const restRes = await fetch(`${API_URL}/Restaurant/${urlRestaurantId}`, { headers });
-           if(restRes.ok) {
-              const restData = await restRes.json();
-              setRestaurant(restData);
-           }
-        } else {
-           setRestaurant({ name: "Noir Cafe", location: "Bilinmeyen Konum" });
+        
+        if(restRes.ok) {
+           const restData = await restRes.json();
+           setRestaurant(restData);
         }
 
         setCategories(categoryData);
         setProducts(productData);
 
-        // İlk kategoriyi varsayılan olarak açık bırakıyoruz
         if (categoryData.length > 0) {
           setActiveCategory(String(categoryData[0].id || categoryData[0].Id).toLowerCase());
         }
@@ -64,29 +70,102 @@ const CustomerMenu: React.FC = () => {
     fetchMenuData();
   }, []);
 
+  // 2. SIGNALR BAĞLANTISI VE DİNLEYİCİ 
+  useEffect(() => {
+    const connectSignalR = async () => {
+      const newConnection = new signalR.HubConnectionBuilder()
+        .withUrl(HUB_URL)
+        .withAutomaticReconnect()
+        .build();
+
+      try {
+        await newConnection.start();
+        console.log("🟢 SignalR Bağlantısı Başarılı!");
+        setConnection(newConnection);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlRestaurantId = urlParams.get('restaurantId');
+        // İleride QR koda masa ID'si de eklersin (?restaurantId=...&tableId=5). Şimdilik varsayılan bir masa atıyoruz.
+        const tableId = urlParams.get('tableId') || "Masa-1"; 
+        
+        // RestoranID ve MasaID'yi birleştirip "Özel Bir Oda" oluşturuyoruz
+        const groupId = `${urlRestaurantId}-${tableId}`;
+
+        // 1. Masaya (Odaya) Katıl
+        await newConnection.invoke("JoinGroup", groupId);
+
+        // 2. Masadaki BAŞKA BİRİ sepete ürün eklediğinde dinle ve ekranı güncelle
+        newConnection.on("ReceiveCartUpdate", (updatedCart: any[]) => {
+          console.log("Senkronize sepet geldi!", updatedCart);
+          setCart(updatedCart); // Sepeti gelen veriyle ez
+        });
+
+      } catch (error) {
+        console.error("🔴 SignalR Bağlantı Hatası:", error);
+      }
+    };
+
+    connectSignalR();
+
+    // Sayfa kapandığında bağlantıyı kopar
+    return () => {
+      if (connection) {
+        connection.stop();
+      }
+    };
+  }, []); // Sadece sayfa ilk açıldığında çalışır
+
+  // 3. SEPETİ DİĞER KİŞİLERE YAYINLAMA FONKSİYONU (YENİ EKLENDİ)
+  const broadcastCartUpdate = async (newCart: any[]) => {
+    if (connection && connection.state === signalR.HubConnectionState.Connected) {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlRestaurantId = urlParams.get('restaurantId');
+        const tableId = urlParams.get('tableId') || "Masa-1"; 
+        const groupId = `${urlRestaurantId}-${tableId}`;
+        
+        // Backend'e "Al bu sepeti gruptaki diğer kişilere gönder" diyoruz
+        await connection.invoke("UpdateCart", groupId, newCart);
+      } catch (error) {
+        console.error("Sepet yayınlanırken hata:", error);
+      }
+    }
+  };
+
   // --- SEPET FONKSİYONLARI ---
   const addToCart = (product: any) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find(item => (item.id || item.Id) === (product.id || product.Id));
+      let newCart;
+      
       if (existingItem) {
-        return prevCart.map(item => 
+        newCart = prevCart.map(item => 
           (item.id || item.Id) === (product.id || product.Id) 
             ? { ...item, quantity: item.quantity + 1 } 
             : item
         );
+      } else {
+        newCart = [...prevCart, { ...product, quantity: 1 }];
       }
-      return [...prevCart, { ...product, quantity: 1 }];
+
+      // Sepet güncellenir güncellenmez masadaki diğer kişilere haber ver
+      broadcastCartUpdate(newCart);
+      return newCart;
     });
   };
 
   const removeFromCart = (productId: string) => {
     setCart((prevCart) => {
-      return prevCart.map(item => {
+      const newCart = prevCart.map(item => {
         if ((item.id || item.Id) === productId) {
           return { ...item, quantity: Math.max(0, item.quantity - 1) };
         }
         return item;
       }).filter(item => item.quantity > 0);
+
+      // Sepet güncellenir güncellenmez masadaki diğer kişilere haber ver
+      broadcastCartUpdate(newCart);
+      return newCart;
     });
   };
 
@@ -94,7 +173,6 @@ const CustomerMenu: React.FC = () => {
   const cartTotalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
   // --- ÜRÜN KARTI RENDER FONKSİYONU ---
-  // Kodu tekrarlamamak için ürün kartı tasarımını bir fonksiyona aldık
   const renderProductCard = (product: any) => {
     const id = product.id || product.Id;
     const name = product.name || product.Name;
@@ -106,10 +184,7 @@ const CustomerMenu: React.FC = () => {
     const quantityInCart = cartItem ? cartItem.quantity : 0;
 
     return (
-      <div 
-        key={id} 
-        className="flex gap-4 p-2 bg-zinc-900/20 hover:bg-zinc-900/40 rounded-[2rem] transition-all duration-300 border border-transparent hover:border-zinc-800 group"
-      >
+      <div key={id} className="flex gap-4 p-2 bg-zinc-900/20 hover:bg-zinc-900/40 rounded-[2rem] transition-all duration-300 border border-transparent hover:border-zinc-800 group">
         <div className="relative w-24 h-24 shrink-0 rounded-[1.5rem] overflow-hidden bg-zinc-800">
           {img ? (
             <img src={img} alt={name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
@@ -125,32 +200,21 @@ const CustomerMenu: React.FC = () => {
               {price} <span className="text-[10px] text-zinc-500">TL</span>
             </span>
           </div>
-          <p className="text-[11px] text-zinc-500 mt-1 line-clamp-2 font-medium leading-relaxed">
-            {desc}
-          </p>
+          <p className="text-[11px] text-zinc-500 mt-1 line-clamp-2 font-medium leading-relaxed">{desc}</p>
           
           <div className="mt-3 flex justify-end items-center">
             {quantityInCart > 0 ? (
               <div className="flex items-center gap-3 bg-zinc-800/80 rounded-full p-1 shadow-inner border border-zinc-700">
-                <button 
-                  onClick={() => removeFromCart(id)}
-                  className="w-7 h-7 flex items-center justify-center bg-zinc-900 rounded-full text-zinc-300 hover:text-white hover:bg-zinc-700 transition-colors"
-                >
+                <button onClick={() => removeFromCart(id)} className="w-7 h-7 flex items-center justify-center bg-zinc-900 rounded-full text-zinc-300 hover:text-white hover:bg-zinc-700 transition-colors">
                   <Minus className="w-3 h-3" />
                 </button>
                 <span className="text-xs font-bold w-4 text-center">{quantityInCart}</span>
-                <button 
-                  onClick={() => addToCart(product)}
-                  className="w-7 h-7 flex items-center justify-center bg-white rounded-full text-black hover:bg-zinc-200 transition-colors"
-                >
+                <button onClick={() => addToCart(product)} className="w-7 h-7 flex items-center justify-center bg-white rounded-full text-black hover:bg-zinc-200 transition-colors">
                   <Plus className="w-3 h-3" />
                 </button>
               </div>
             ) : (
-              <button 
-                onClick={() => addToCart(product)}
-                className="p-1.5 bg-white rounded-full text-black hover:bg-zinc-200 transition-colors shadow-lg"
-              >
+              <button onClick={() => addToCart(product)} className="p-1.5 bg-white rounded-full text-black hover:bg-zinc-200 transition-colors shadow-lg">
                 <Plus className="w-4 h-4" />
               </button>
             )}
@@ -171,24 +235,19 @@ const CustomerMenu: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-zinc-100 font-sans pb-28">
-      
       {/* HEADER SECTION */}
       <header className="sticky top-0 z-30 bg-[#0A0A0A]/80 backdrop-blur-xl border-b border-zinc-800/50">
         <div className="px-6 pt-8 pb-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-white">
-                {restaurant?.name || restaurant?.Name || "Restoran"}
-              </h1>
+              <h1 className="text-2xl font-bold tracking-tight text-white">{restaurant?.name || restaurant?.Name || "Restoran"}</h1>
               <p className="text-xs text-zinc-500 flex items-center gap-1.5 mt-1 font-medium uppercase tracking-wider">
                 <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                 Açık • {restaurant?.location || restaurant?.Location || "Konum Bulunamadı"}
               </p>
             </div>
             <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-2xl">
-              <span className="text-xl font-black text-white">
-                {(restaurant?.name || restaurant?.Name || "N").charAt(0).toUpperCase()}
-              </span>
+              <span className="text-xl font-black text-white">{(restaurant?.name || restaurant?.Name || "N").charAt(0).toUpperCase()}</span>
             </div>
           </div>
 
@@ -196,10 +255,7 @@ const CustomerMenu: React.FC = () => {
           <div className="relative group">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 group-focus-within:text-white transition-colors" />
             <input 
-              type="text" 
-              placeholder="Lezzet keşfine çık..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              type="text" placeholder="Lezzet keşfine çık..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-11 pr-4 py-3 bg-zinc-900/50 border border-zinc-800 rounded-2xl text-sm focus:outline-none focus:ring-1 focus:ring-zinc-600 focus:bg-zinc-900 transition-all placeholder:text-zinc-600"
             />
           </div>
@@ -209,7 +265,6 @@ const CustomerMenu: React.FC = () => {
       {/* MAIN CONTENT: ACCORDION OR SEARCH RESULTS */}
       <main className="px-6 mt-6 max-w-2xl mx-auto space-y-4">
         {searchQuery ? (
-          // ARAMA YAPILDIĞINDA: Düz liste göster
           <div className="space-y-4">
             <h2 className="text-xs font-bold text-zinc-500 uppercase tracking-widest pl-2 mb-4">Arama Sonuçları</h2>
             {products.filter(p => String(p.name || p.Name || "").toLowerCase().includes(searchQuery.toLowerCase())).length === 0 ? (
@@ -217,46 +272,29 @@ const CustomerMenu: React.FC = () => {
                 <p className="text-zinc-500 text-sm">Aradığınız ürün bulunamadı.</p>
               </div>
             ) : (
-              products
-                .filter(p => String(p.name || p.Name || "").toLowerCase().includes(searchQuery.toLowerCase()))
-                .map(product => renderProductCard(product))
+              products.filter(p => String(p.name || p.Name || "").toLowerCase().includes(searchQuery.toLowerCase())).map(product => renderProductCard(product))
             )}
           </div>
         ) : (
-          // NORMAL GÖRÜNÜM: Kategori Akordiyonları
           categories.map((category) => {
             const catId = String(category.id || category.Id).toLowerCase();
             const catName = category.name || category.Name;
             const isOpen = activeCategory === catId;
-            
-            // Bu kategoriye ait ürünleri filtrele
-            const categoryProducts = products.filter(p => 
-              String(p.categoryId || p.CategoryId || "").toLowerCase() === catId
-            );
+            const categoryProducts = products.filter(p => String(p.categoryId || p.CategoryId || "").toLowerCase() === catId);
 
-            // Eğer kategoride ürün yoksa, o kategoriyi ekranda gösterme
             if (categoryProducts.length === 0) return null;
 
             return (
               <div key={catId} className="flex flex-col gap-3">
-                {/* AKORDİYON BAŞLIĞI */}
                 <button
                   onClick={() => setActiveCategory(isOpen ? '' : catId)}
-                  className={`flex items-center justify-between w-full p-5 rounded-2xl border transition-all duration-300 ${
-                    isOpen 
-                      ? 'bg-zinc-800/80 border-zinc-700 shadow-lg' 
-                      : 'bg-zinc-900/50 border-zinc-800 hover:bg-zinc-800/50'
-                  }`}
+                  className={`flex items-center justify-between w-full p-5 rounded-2xl border transition-all duration-300 ${isOpen ? 'bg-zinc-800/80 border-zinc-700 shadow-lg' : 'bg-zinc-900/50 border-zinc-800 hover:bg-zinc-800/50'}`}
                 >
-                  <span className={`font-bold text-lg tracking-tight ${isOpen ? 'text-white' : 'text-zinc-300'}`}>
-                    {catName}
-                  </span>
+                  <span className={`font-bold text-lg tracking-tight ${isOpen ? 'text-white' : 'text-zinc-300'}`}>{catName}</span>
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${isOpen ? 'bg-zinc-700' : 'bg-zinc-800'}`}>
                     <ChevronRight className={`w-4 h-4 text-zinc-400 transition-transform duration-300 ${isOpen ? 'rotate-90 text-white' : ''}`} />
                   </div>
                 </button>
-
-                {/* AKORDİYON İÇERİĞİ (ÜRÜNLER) */}
                 {isOpen && (
                   <div className="flex flex-col gap-4 pt-2 pb-4 animate-in slide-in-from-top-4 fade-in duration-300">
                     {categoryProducts.map(product => renderProductCard(product))}
@@ -268,7 +306,7 @@ const CustomerMenu: React.FC = () => {
         )}
       </main>
 
-      {/* FLOATING CART BAR - DİNAMİK */}
+      {/* FLOATING CART BAR */}
       {cartTotalItems > 0 && (
         <div className="fixed bottom-8 left-0 right-0 px-6 flex justify-center pointer-events-none animate-in slide-in-from-bottom-10 fade-in duration-300">
           <button className="pointer-events-auto bg-white text-black w-full max-w-md rounded-2xl py-4 px-6 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.5)] group overflow-hidden relative">
@@ -276,9 +314,7 @@ const CustomerMenu: React.FC = () => {
             <div className="relative flex items-center gap-4">
               <div className="bg-black text-white p-2 rounded-xl relative">
                 <ShoppingBag className="w-5 h-5" />
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">
-                  {cartTotalItems}
-                </span>
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">{cartTotalItems}</span>
               </div>
               <div className="text-left">
                 <p className="text-[10px] font-bold uppercase tracking-tighter opacity-60">Siparişi Tamamla</p>
@@ -291,7 +327,6 @@ const CustomerMenu: React.FC = () => {
           </button>
         </div>
       )}
-
     </div>
   );
 };
