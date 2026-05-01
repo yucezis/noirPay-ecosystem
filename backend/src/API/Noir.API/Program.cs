@@ -102,6 +102,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+// Müþteri (5173) ve Admin (5174) portlarýna izin veren CORS politikasý
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("NoirCorsPolicy", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173", "http://localhost:5174") // Hangi portlardan istek geleceðini belirtiyoruz
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials(); // SignalR çalýþtýðý için bu SATIR ZORUNLU!
+    });
+});
+
 
 // --- 2. UYGULAMA YAÞAM DÖNGÜSÜ (PIPELINE) ---
 var app = builder.Build();

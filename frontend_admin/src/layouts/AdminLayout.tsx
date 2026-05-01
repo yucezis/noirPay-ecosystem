@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Coffee, 
@@ -14,6 +14,16 @@ import {
 
 const AdminLayout: React.FC = () => {
   const location = useLocation();
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // 1. LocalStorage'daki bilgileri temizle
+    localStorage.removeItem('token');
+    localStorage.removeItem('restaurantId'); 
+    
+    window.location.href = '/login'; 
+  };
 
   // Menü elemanlarımızı tanımlıyoruz
   const menuItems = [
@@ -69,7 +79,10 @@ const AdminLayout: React.FC = () => {
 
         {/* Alt Kısım - Çıkış Yap */}
         <div className="p-4 border-t border-gray-100">
-          <button className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-red-500 hover:bg-red-50 transition-colors font-medium text-sm">
+          <button 
+            onClick={handleLogout} 
+            className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-red-500 hover:bg-red-50 transition-colors font-medium text-sm"
+          >
             <LogOut className="w-5 h-5" />
             Çıkış Yap
           </button>
