@@ -21,6 +21,8 @@ const CustomerMenu: React.FC = () => {
   const [cart, setCart] = useState<any[]>([]);
   const [connection, setConnection] = useState<signalR.HubConnection | null>(null);
 
+  const [isOrderPlaced, setIsOrderPlaced] = useState(false);
+
   // 1. DATA FETCHING (Mevcut kodun, ufak koruma kalkanıyla beraber)
   useEffect(() => {
     const fetchMenuData = async () => {
@@ -100,6 +102,14 @@ const CustomerMenu: React.FC = () => {
           setCart(updatedCart); // Sepeti gelen veriyle ez
         });
 
+        // 3. Mutfaktan "Sipariş Alındı" onayı geldiğinde ekranı güncelle
+        newConnection.on("Siparişiniz mutfağa iletildi", () => {
+          console.log("🟢 Mutfak siparişi teslim aldı!");
+          setIsOrderPlaced(true); // Ekranda "Hazırlanıyor" sayfasını aç
+          setCart([]); // Kendi sepetini sıfırla
+          broadcastCartUpdate([]); // Masadaki diğer arkadaşının sepetini de sıfırla
+        });
+
       } catch (error) {
         console.error("🔴 SignalR Bağlantı Hatası:", error);
       }
@@ -129,6 +139,23 @@ const CustomerMenu: React.FC = () => {
       } catch (error) {
         console.error("Sepet yayınlanırken hata:", error);
       }
+    }
+  };
+
+  // --- SİPARİŞİ TAMAMLA FONKSİYONU (NOIR-24) ---
+  const handleCheckout = async () => {
+    if (cart.length === 0 || !connection) return;
+
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlRestaurantId = String(urlParams.get('restaurantId'));
+      const tableId = urlParams.get('tableId') || "Masa-1"; 
+
+      await connection.invoke("SendOrder", urlRestaurantId, tableId, cart);
+      
+    } catch (error) {
+      console.error("Sipariş gönderilirken hata oluştu:", error);
+      alert("Bağlantı hatası: Siparişiniz iletilemedi.");
     }
   };
 
@@ -284,6 +311,28 @@ const CustomerMenu: React.FC = () => {
 
             if (categoryProducts.length === 0) return null;
 
+            if (isOrderPlaced) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#0A0A0A] text-zinc-100 p-6 text-center animate-in fade-in duration-700">
+        <div className="w-24 h-24 bg-green-500/20 rounded-full flex items-center justify-center mb-6 animate-pulse">
+          <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(34,197,94,0.5)]">
+            <span className="text-3xl">👨‍🍳</span>
+          </div>
+        </div>
+        <h1 className="text-3xl font-black mb-2 tracking-tight text-white">Siparişiniz Alındı!</h1>
+        <p className="text-zinc-400 mb-8 max-w-xs leading-relaxed">
+          Lezzetleriniz mutfağa başarıyla iletildi ve şu an şeflerimiz tarafından özenle hazırlanıyor <br/>(Status: Preparing).
+        </p>
+        <button
+          onClick={() => setIsOrderPlaced(false)}
+          className="px-8 py-3 bg-zinc-900 border border-zinc-800 rounded-full text-sm font-bold text-white hover:bg-zinc-800 transition-colors"
+        >
+          Menüye Geri Dön
+        </button>
+      </div>
+    );
+  }
+
             return (
               <div key={catId} className="flex flex-col gap-3">
                 <button
@@ -309,7 +358,11 @@ const CustomerMenu: React.FC = () => {
       {/* FLOATING CART BAR */}
       {cartTotalItems > 0 && (
         <div className="fixed bottom-8 left-0 right-0 px-6 flex justify-center pointer-events-none animate-in slide-in-from-bottom-10 fade-in duration-300">
-          <button className="pointer-events-auto bg-white text-black w-full max-w-md rounded-2xl py-4 px-6 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.5)] group overflow-hidden relative">
+          
+          <button 
+            onClick={handleCheckout} 
+            className="pointer-events-auto bg-white text-black w-full max-w-md rounded-2xl py-4 px-6 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.5)] group overflow-hidden relative"
+          >
             <div className="absolute inset-0 bg-zinc-200 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
             <div className="relative flex items-center gap-4">
               <div className="bg-black text-white p-2 rounded-xl relative">
@@ -325,6 +378,7 @@ const CustomerMenu: React.FC = () => {
               ÖDE <ChevronRight className="w-4 h-4" />
             </div>
           </button>
+          
         </div>
       )}
     </div>
