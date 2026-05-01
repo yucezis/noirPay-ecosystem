@@ -88,7 +88,7 @@ const CustomerMenu: React.FC = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const urlRestaurantId = urlParams.get('restaurantId');
         // İleride QR koda masa ID'si de eklersin (?restaurantId=...&tableId=5). Şimdilik varsayılan bir masa atıyoruz.
-        const tableId = urlParams.get('tableId') || "Masa-1"; 
+        const tableId = urlParams.get('tableId') || "A-01"; 
         
         // RestoranID ve MasaID'yi birleştirip "Özel Bir Oda" oluşturuyoruz
         const groupId = `${urlRestaurantId}-${tableId}`;
@@ -150,6 +150,12 @@ const CustomerMenu: React.FC = () => {
       const urlParams = new URLSearchParams(window.location.search);
       const urlRestaurantId = String(urlParams.get('restaurantId'));
       const tableId = urlParams.get('tableId') || "Masa-1"; 
+
+      console.log("🔥 BACKEND'E GİDEN VERİLER:", {
+   restaurantId: urlRestaurantId, // Senin kodundaki değişken adı neyse o
+   tableId: tableId,           // Senin kodundaki masa değişkeni
+   cartItems: cart             // Senin sepet değişkenin
+});
 
       await connection.invoke("SendOrder", urlRestaurantId, tableId, cart);
       

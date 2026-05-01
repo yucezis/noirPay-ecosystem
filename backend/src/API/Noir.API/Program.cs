@@ -30,7 +30,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:5173") 
+        policy.WithOrigins("http://localhost:5173", "http://localhost:5174") 
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -120,11 +120,6 @@ var app = builder.Build();
 
 app.MapHub<OrderHub>("/orderHub");
 
-app.UseCors(policy => policy
-    .WithOrigins("http://localhost:5173")
-    .AllowAnyMethod()
-    .AllowAnyHeader()
-    .AllowCredentials());
 
 if (app.Environment.IsDevelopment())
 {
