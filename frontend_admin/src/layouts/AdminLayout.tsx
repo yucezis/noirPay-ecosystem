@@ -8,7 +8,8 @@ import {
   Settings, 
   LogOut,
   Bell,
-  Store
+  Store,
+  Table,
 } from 'lucide-react';
 
 const AdminLayout: React.FC = () => {
@@ -17,11 +18,12 @@ const AdminLayout: React.FC = () => {
   // Menü elemanlarımızı tanımlıyoruz
   const menuItems = [
     { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
+    { path: '/orders', icon: Table, label: 'Aktif Siparişler' },
+    { path: '/***', icon: Table, label: 'Masa Doluluk' },
     { path: '/add-restaurant', icon: Store, label: 'Restorant' },
     { path: '/categories', icon: Coffee, label: 'Kategori Yönetimi' },
     { path: '/products', icon: Coffee, label: 'Ürün Yönetimi' },
     { path: '/tables', icon: QrCode, label: 'Masa Yönetimi' },
-    { path: '/orders', icon: ClipboardList, label: 'Siparişler' },
     { path: '/settings', icon: Settings, label: 'Ayarlar' },
   ];
 
