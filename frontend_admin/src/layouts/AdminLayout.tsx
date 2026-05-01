@@ -77,7 +77,7 @@ const AdminLayout: React.FC = () => {
   const menuItems = [
     { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
     { path: '/orders', icon: Table, label: 'Aktif Siparişler' },
-    { path: '/***', icon: Table, label: 'Masa Doluluk' },
+    { path: '/table', icon: Table, label: 'Masa Doluluk' },
     { path: '/add-restaurant', icon: Store, label: 'Restorant' },
     { path: '/categories', icon: Coffee, label: 'Kategori Yönetimi' },
     { path: '/products', icon: Coffee, label: 'Ürün Yönetimi' },
