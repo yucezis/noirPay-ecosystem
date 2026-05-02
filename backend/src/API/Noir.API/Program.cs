@@ -1,41 +1,59 @@
-
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Noir.Application.Abstractions;
 using Noir.Infrastructure.Authentication;
 using Noir.API.Hubs;
-using Microsoft.EntityFrameworkCore;
 using Noir.Infrastructure.Contexts;
-using Microsoft.OpenApi.Models;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSignalR();
-
 // --- 1. SERVÝS KAYITLARI (DEPENDENCY INJECTION) ---
 
-builder.Services.AddCors(options => {
-    options.AddDefaultPolicy(policy => {
-        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-    });
-});
-
-// API projelerinde Controller kullanacaðýmýz için bu servisi ekliyoruz
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
 
+// Tek ve Doðru CORS Politikamýz
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp", policy =>
+    options.AddPolicy("NoirCorsPolicy", policy =>
     {
-        policy.WithOrigins("http://localhost:5173", "http://localhost:5174") 
+        policy.WithOrigins("http://localhost:5173", "http://localhost:5174")
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials(); // SignalR için zorunlu
     });
 });
 
+// Veritabaný Baðlantýsý
+builder.Services.AddDbContext<NoirDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// JwtProvider Sözleþmesi 
+builder.Services.AddScoped<IJwtProvider, JwtProvider>();
+
+// JWT Doðrulama Ayarlarý
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+            ValidAudience = builder.Configuration["JwtSettings:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"]!))
+        };
+    });
+
+builder.Services.AddAuthorization();
+
+// Swagger Ayarlarý
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -67,80 +85,27 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// PostgreSQL baÄŸlantÄ±sÄ±nÄ±n Dependency Injection ile sisteme eklenmesi
-builder.Services.AddDbContext<NoirDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-
-builder.Services.AddOpenApi();
-
-// Veritabaný Baðlantýsý (NOIR-11)
-builder.Services.AddDbContext<NoirDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// JwtProvider Sözleþmesi (NOIR-12)
-builder.Services.AddScoped<IJwtProvider, JwtProvider>();
-
-// JWT Doðrulama Ayarlarý (NOIR-12)
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
-            ValidAudience = builder.Configuration["JwtSettings:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"]!))
-        };
-    });
-
-builder.Services.AddAuthorization();
-
-// Müþteri (5173) ve Admin (5174) portlarýna izin veren CORS politikasý
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("NoirCorsPolicy", policy =>
-    {
-        policy.WithOrigins("http://localhost:5173", "http://localhost:5174") // Hangi portlardan istek geleceðini belirtiyoruz
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials(); // SignalR çalýþtýðý için bu SATIR ZORUNLU!
-    });
-});
-
-
 // --- 2. UYGULAMA YAÞAM DÖNGÜSÜ (PIPELINE) ---
 var app = builder.Build();
 
-app.MapHub<OrderHub>("/orderHub");
-
-
+// Geliþtirme ortamý ayarlarý
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();    
-}
-
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowReactApp");
+// 1. ÖNCE CORS ÇALIÞMALI (Sýralama çok önemli!)
+app.UseCors("NoirCorsPolicy");
 
-// Güvenlik kapýlarý (Sýrasý çok kritiktir: Önce kimlik, sonra yetki)
+// 2. SONRA GÜVENLÝK KONTROLLERÝ YAPILMALI
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Controller rotalarýný ayaða kaldýr
+// 3. EN SON ROTALAR (ENDPOINTS VE HUBS) AYAÐA KALKMALI
 app.MapControllers();
+app.MapHub<OrderHub>("/OrderHub");
 
 app.Run();

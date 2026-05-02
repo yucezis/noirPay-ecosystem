@@ -131,7 +131,7 @@ const CustomerMenu: React.FC = () => {
       try {
         const urlParams = new URLSearchParams(window.location.search);
         const urlRestaurantId = urlParams.get('restaurantId');
-        const tableId = urlParams.get('tableId') || "Masa-1"; 
+        const tableId = urlParams.get('tableId') || "A-01"; 
         const groupId = `${urlRestaurantId}-${tableId}`;
         
         // Backend'e "Al bu sepeti gruptaki diğer kişilere gönder" diyoruz
@@ -149,7 +149,7 @@ const CustomerMenu: React.FC = () => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const urlRestaurantId = String(urlParams.get('restaurantId'));
-      const tableId = urlParams.get('tableId') || "Masa-1"; 
+      const tableId = urlParams.get('tableId') || "A-01"; 
 
       console.log("🔥 BACKEND'E GİDEN VERİLER:", {
    restaurantId: urlRestaurantId, // Senin kodundaki değişken adı neyse o

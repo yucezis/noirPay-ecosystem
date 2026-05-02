@@ -16,3 +16,5 @@ C:\all_projects\noirPay-ecosystem\backend\src\Infrastructure\Noir.Infrastructure
 C:\all_projects\noirPay-ecosystem\backend\src\Infrastructure\Noir.Infrastructure\obj\Debug\net9.0\refint\Noir.Infrastructure.dll
 C:\all_projects\noirPay-ecosystem\backend\src\Infrastructure\Noir.Infrastructure\obj\Debug\net9.0\Noir.Infrastructure.pdb
 C:\all_projects\noirPay-ecosystem\backend\src\Infrastructure\Noir.Infrastructure\obj\Debug\net9.0\ref\Noir.Infrastructure.dll
+C:\all_projects\noirPay-ecosystem\backend\src\Infrastructure\Noir.Infrastructure\bin\Debug\net9.0\Noir.Infrastructure.runtimeconfig.json
+C:\all_projects\noirPay-ecosystem\backend\src\Infrastructure\Noir.Infrastructure\obj\Debug\net9.0\Noir.Infrastructure.genruntimeconfig.cache
