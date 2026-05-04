@@ -29,13 +29,12 @@ const ActiveOrders: React.FC = () => {
     const restaurantId = localStorage.getItem("restaurantId");
     const token = localStorage.getItem("token");
 
-    // 🛡️ GÜVENLİK DUVARI: Veriler yoksa veya 'undefined' ise dur!
     if (!restaurantId || restaurantId === 'undefined' || !token) {
       console.warn("⚠️ Oturum bilgileri eksik. İstek gönderilmedi.");
       return; 
     }
 
-    // 2. VERİTABANINDAN MEVCUT SİPARİŞLERİ ÇEK (FETCH)
+    // 2. VERİTABANINDAN MEVCUT SİPARİŞLERİ ÇEK 
     const fetchExistingOrders = async () => {
       try {
         // Backend'deki OrderController endpoint'ine gidiyoruz
@@ -70,7 +69,6 @@ const ActiveOrders: React.FC = () => {
         await newConnection.start();
         console.log("🟢 SignalR Hub Bağlantısı Aktif.");
 
-        // Backend ile grup adının (Restorant_ vs Restaurant_) aynı olduğundan emin ol
         await newConnection.invoke("JoinGroup", `Restorant_${restaurantId}`);
 
         newConnection.on("Yeni sipariş", (data: any) => {
@@ -102,13 +100,23 @@ const ActiveOrders: React.FC = () => {
 
   // Siparişi tamamla butonu için fonksiyon
   const markAsReady = async (orderId: string) => {
-    try {
-      setOrders(prev => prev.filter(o => o.orderId !== orderId));
-      // Opsiyonel: Backend'e de "tamamlandı" isteği atılabilir
-    } catch (err) {
-      console.error("Sipariş güncellenemedi.");
-    }
-  };
+  const token = localStorage.getItem("token");
+
+  try {
+    // 1. Backend'e "Bu sipariş bitti" de
+    await axios.post(`https://localhost:7057/api/Order/complete/${orderId}`, {}, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    // 2. Local State'den kaldır (Arayüzde şık bir kaybolma efekti için)
+    setOrders(prev => prev.filter(o => o.orderId !== orderId));
+    
+    console.log(`✅ Sipariş ${orderId} tamamlandı.`);
+  } catch (err) {
+    console.error("🔴 Sipariş tamamlanırken hata oluştu:", err);
+    alert("Sipariş durumu güncellenemedi, lütfen bağlantınızı kontrol edin.");
+  }
+};
 
 
   return (
