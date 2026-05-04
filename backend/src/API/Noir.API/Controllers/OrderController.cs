@@ -6,21 +6,25 @@ using System.Security.Claims;
 using Noir.Domain.Entities;
 using Noir.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
+using Noir.API.Hubs;
 
 
 namespace Noir.API.Controllers
 {
-   
-        [ApiController]
-        [Route("api/[controller]")]
-        public class OrderController : ControllerBase
-        {
-            private readonly NoirDbContext _context; 
 
-            public OrderController(NoirDbContext context)
-            {
-                _context = context;
-            }
+    [ApiController]
+    [Route("api/[controller]")]
+    public class OrderController : ControllerBase
+    {
+        private readonly NoirDbContext _context;
+        private readonly IHubContext<OrderHub> _hubContext;
+
+        public OrderController(NoirDbContext context, IHubContext<OrderHub> hubContext)
+        {
+            _context = context;
+            _hubContext = hubContext;
+        }
 
         [HttpGet("active/{restaurantId}")]
         public async Task<IActionResult> GetActiveOrders(Guid restaurantId)
@@ -30,7 +34,7 @@ namespace Noir.API.Controllers
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.Product)
                 .Where(o => o.IsActive && o.RestaurantId == restaurantId)
-                .OrderByDescending(o => o.CreatedAt) 
+                .OrderByDescending(o => o.CreatedAt)
                 .Select(o => new
                 {
                     Id = o.Id,
@@ -42,7 +46,7 @@ namespace Noir.API.Controllers
                     {
                         Name = oi.Product != null ? oi.Product.Name : "Silinmiş Ürün",
                         Quantity = oi.Quantity,
-                        Price = oi.UnitPrice 
+                        Price = oi.UnitPrice
                     })
                 })
                 .ToListAsync();
@@ -50,16 +54,21 @@ namespace Noir.API.Controllers
             return Ok(activeOrders);
         }
 
+
         [HttpPost("complete/{orderId}")]
-            public async Task<IActionResult> CompleteOrder(Guid orderId)
-            {
-                var order = await _context.Orders.FindAsync(orderId);
-                if (order == null) return NotFound();
+        public async Task<IActionResult> CompleteOrder(Guid orderId)
+        {
+            var order = await _context.Orders.FindAsync(orderId);
 
-                order.IsActive = false; 
-                await _context.SaveChangesAsync();
+            if (order == null)
+                return NotFound(new { Message = "Sipariş bulunamadı." });
 
-                return Ok(new { Message = "Sipariş tamamlandı." });
-            }
+            order.IsActive = false;
+
+            await _context.SaveChangesAsync();
+            await _hubContext.Clients.Group(order.TableId.ToString()).SendAsync("StatusUpdated", "Siparişiniz Teslim Edildi");
+
+            return Ok(new { Message = "Sipariş başarıyla tamamlandı ve arşivlendi." });
         }
+    }
 }
