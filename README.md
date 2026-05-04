@@ -1,6 +1,6 @@
 # 🍸 NoirPay | Next-Generation Digital Check and Payment Ecosystem
 
-![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![.NET](https://img.shields.io/badge/.NET-9.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
@@ -35,7 +35,7 @@ While socializing in today's cafe and restaurant culture is enjoyable, splitting
 
 The project is developed in a **Monorepo** structure adhering to enterprise-standard **Clean Architecture** principles.
 
-### Backend (.NET 8)
+### Backend (.NET 9)
 * **Core:** Domain-Driven Design (DDD) Entities.
 * **Application:** Business logic layer separated using CQRS and MediatR patterns.
 * **Infrastructure:** Entity Framework Core (Code-First) and database integrations.
