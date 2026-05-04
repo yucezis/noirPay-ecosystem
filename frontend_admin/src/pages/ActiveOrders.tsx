@@ -20,7 +20,7 @@ interface IncomingOrder {
   status: 'preparing' | 'ready';
 }
 
-localStorage.setItem("token", Response.token);
+const token = localStorage.getItem("token");
 const restaurantId = localStorage.getItem("restaurantId");
 
 const ActiveOrders: React.FC = () => {
