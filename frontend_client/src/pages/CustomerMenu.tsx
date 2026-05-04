@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ShoppingBag, ChevronRight, Loader2, Plus, Minus } from 'lucide-react';
-import * as signalR from '@microsoft/signalr'; // 1. SignalR Eklendi
+import { useNavigate } from 'react-router-dom'; // 🌟 EKLENDİ: Yönlendirme için
+import { Search, ShoppingBag, ChevronRight, Loader2, Plus, Minus, Receipt } from 'lucide-react'; // 🌟 EKLENDİ: Receipt ikonu
+import * as signalR from '@microsoft/signalr';
 
 const API_URL = 'https://localhost:7057/api';
-
 const HUB_URL = 'https://localhost:7057/OrderHub'; 
 
 const CustomerMenu: React.FC = () => {
+  const navigate = useNavigate(); // 🌟 EKLENDİ: Router aracı
+
   // --- API Veri State'leri ---
   const [restaurant, setRestaurant] = useState<any>(null);
   const [categories, setCategories] = useState<any[]>([]);
@@ -20,10 +22,9 @@ const CustomerMenu: React.FC = () => {
   // --- SEPET VE SIGNALR STATE'LERİ ---
   const [cart, setCart] = useState<any[]>([]);
   const [connection, setConnection] = useState<signalR.HubConnection | null>(null);
-
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
 
-  // 1. DATA FETCHING (Mevcut kodun, ufak koruma kalkanıyla beraber)
+  // ... (1. DATA FETCHING ve 2. SIGNALR BAĞLANTISI kodların tamamen aynı kalıyor) ...
   useEffect(() => {
     const fetchMenuData = async () => {
       try {
@@ -72,7 +73,6 @@ const CustomerMenu: React.FC = () => {
     fetchMenuData();
   }, []);
 
-  // 2. SIGNALR BAĞLANTISI VE DİNLEYİCİ 
   useEffect(() => {
     const connectSignalR = async () => {
       const newConnection = new signalR.HubConnectionBuilder()
@@ -82,32 +82,23 @@ const CustomerMenu: React.FC = () => {
 
       try {
         await newConnection.start();
-        console.log("🟢 SignalR Bağlantısı Başarılı!");
         setConnection(newConnection);
 
         const urlParams = new URLSearchParams(window.location.search);
         const urlRestaurantId = urlParams.get('restaurantId');
-        // İleride QR koda masa ID'si de eklersin (?restaurantId=...&tableId=5). Şimdilik varsayılan bir masa atıyoruz.
         const tableId = urlParams.get('tableId') || "A-01"; 
-        
-        // RestoranID ve MasaID'yi birleştirip "Özel Bir Oda" oluşturuyoruz
         const groupId = `${urlRestaurantId}-${tableId}`;
 
-        // 1. Masaya (Odaya) Katıl
         await newConnection.invoke("JoinGroup", groupId);
 
-        // 2. Masadaki BAŞKA BİRİ sepete ürün eklediğinde dinle ve ekranı güncelle
         newConnection.on("ReceiveCartUpdate", (updatedCart: any[]) => {
-          console.log("Senkronize sepet geldi!", updatedCart);
-          setCart(updatedCart); // Sepeti gelen veriyle ez
+          setCart(updatedCart);
         });
 
-        // 3. Mutfaktan "Sipariş Alındı" onayı geldiğinde ekranı güncelle
         newConnection.on("Siparişiniz mutfağa iletildi", () => {
-          console.log("🟢 Mutfak siparişi teslim aldı!");
-          setIsOrderPlaced(true); // Ekranda "Hazırlanıyor" sayfasını aç
-          setCart([]); // Kendi sepetini sıfırla
-          broadcastCartUpdate([]); // Masadaki diğer arkadaşının sepetini de sıfırla
+          setIsOrderPlaced(true); 
+          setCart([]); 
+          broadcastCartUpdate([]); 
         });
 
       } catch (error) {
@@ -117,15 +108,13 @@ const CustomerMenu: React.FC = () => {
 
     connectSignalR();
 
-    // Sayfa kapandığında bağlantıyı kopar
     return () => {
       if (connection) {
         connection.stop();
       }
     };
-  }, []); // Sadece sayfa ilk açıldığında çalışır
+  }, []);
 
-  // 3. SEPETİ DİĞER KİŞİLERE YAYINLAMA FONKSİYONU (YENİ EKLENDİ)
   const broadcastCartUpdate = async (newCart: any[]) => {
     if (connection && connection.state === signalR.HubConnectionState.Connected) {
       try {
@@ -134,7 +123,6 @@ const CustomerMenu: React.FC = () => {
         const tableId = urlParams.get('tableId') || "A-01"; 
         const groupId = `${urlRestaurantId}-${tableId}`;
         
-        // Backend'e "Al bu sepeti gruptaki diğer kişilere gönder" diyoruz
         await connection.invoke("UpdateCart", groupId, newCart);
       } catch (error) {
         console.error("Sepet yayınlanırken hata:", error);
@@ -142,7 +130,6 @@ const CustomerMenu: React.FC = () => {
     }
   };
 
-  // --- SİPARİŞİ TAMAMLA FONKSİYONU (NOIR-24) ---
   const handleCheckout = async () => {
     if (cart.length === 0 || !connection) return;
 
@@ -151,37 +138,31 @@ const CustomerMenu: React.FC = () => {
       const urlRestaurantId = String(urlParams.get('restaurantId'));
       const tableId = urlParams.get('tableId') || "A-01"; 
 
-      console.log("🔥 BACKEND'E GİDEN VERİLER:", {
-   restaurantId: urlRestaurantId, // Senin kodundaki değişken adı neyse o
-   tableId: tableId,           // Senin kodundaki masa değişkeni
-   cartItems: cart             // Senin sepet değişkenin
-});
-
       await connection.invoke("SendOrder", urlRestaurantId, tableId, cart);
-      
     } catch (error) {
-      console.error("Sipariş gönderilirken hata oluştu:", error);
       alert("Bağlantı hatası: Siparişiniz iletilemedi.");
     }
   };
 
-  // --- SEPET FONKSİYONLARI ---
+  // 🌟 EKLENDİ: HESABIM SAYFASINA GİTME FONKSİYONU
+  const handleGoToBill = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tableId = urlParams.get('tableId') || "A-01";
+    navigate(`/bill/${tableId}`);
+  };
+
+  // ... (Sepet ve Render kodların aynı) ...
   const addToCart = (product: any) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find(item => (item.id || item.Id) === (product.id || product.Id));
       let newCart;
-      
       if (existingItem) {
         newCart = prevCart.map(item => 
-          (item.id || item.Id) === (product.id || product.Id) 
-            ? { ...item, quantity: item.quantity + 1 } 
-            : item
+          (item.id || item.Id) === (product.id || product.Id) ? { ...item, quantity: item.quantity + 1 } : item
         );
       } else {
         newCart = [...prevCart, { ...product, quantity: 1 }];
       }
-
-      // Sepet güncellenir güncellenmez masadaki diğer kişilere haber ver
       broadcastCartUpdate(newCart);
       return newCart;
     });
@@ -195,8 +176,6 @@ const CustomerMenu: React.FC = () => {
         }
         return item;
       }).filter(item => item.quantity > 0);
-
-      // Sepet güncellenir güncellenmez masadaki diğer kişilere haber ver
       broadcastCartUpdate(newCart);
       return newCart;
     });
@@ -205,7 +184,6 @@ const CustomerMenu: React.FC = () => {
   const cartTotalAmount = cart.reduce((total, item) => total + ((item.price || item.Price) * item.quantity), 0);
   const cartTotalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
-  // --- ÜRÜN KARTI RENDER FONKSİYONU ---
   const renderProductCard = (product: any) => {
     const id = product.id || product.Id;
     const name = product.name || product.Name;
@@ -279,9 +257,22 @@ const CustomerMenu: React.FC = () => {
                 Açık • {restaurant?.location || restaurant?.Location || "Konum Bulunamadı"}
               </p>
             </div>
-            <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-2xl">
-              <span className="text-xl font-black text-white">{(restaurant?.name || restaurant?.Name || "N").charAt(0).toUpperCase()}</span>
+            
+            {/* 🌟 EKLENDİ: HESABIM BUTONU VE LOGO YANYANA 🌟 */}
+            <div className="flex items-center gap-3">
+              <button 
+                onClick={handleGoToBill} 
+                className="h-12 px-4 bg-zinc-900 border border-zinc-800 rounded-2xl flex items-center gap-2 hover:bg-zinc-800 transition-colors shadow-lg"
+              >
+                <Receipt className="w-5 h-5 text-orange-500" />
+                <span className="font-bold text-sm text-white">Hesabım</span>
+              </button>
+              
+              <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-2xl">
+                <span className="text-xl font-black text-white">{(restaurant?.name || restaurant?.Name || "N").charAt(0).toUpperCase()}</span>
+              </div>
             </div>
+            
           </div>
 
           {/* SEARCH BAR */}
@@ -295,8 +286,9 @@ const CustomerMenu: React.FC = () => {
         </div>
       </header>
 
-      {/* MAIN CONTENT: ACCORDION OR SEARCH RESULTS */}
+      {/* MAIN CONTENT */}
       <main className="px-6 mt-6 max-w-2xl mx-auto space-y-4">
+        {/* ... (Arama Sonuçları, Kategoriler ve Sipariş Alındı kısımları aynı) ... */}
         {searchQuery ? (
           <div className="space-y-4">
             <h2 className="text-xs font-bold text-zinc-500 uppercase tracking-widest pl-2 mb-4">Arama Sonuçları</h2>
@@ -318,26 +310,26 @@ const CustomerMenu: React.FC = () => {
             if (categoryProducts.length === 0) return null;
 
             if (isOrderPlaced) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-[#0A0A0A] text-zinc-100 p-6 text-center animate-in fade-in duration-700">
-        <div className="w-24 h-24 bg-green-500/20 rounded-full flex items-center justify-center mb-6 animate-pulse">
-          <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(34,197,94,0.5)]">
-            <span className="text-3xl">👨‍🍳</span>
-          </div>
-        </div>
-        <h1 className="text-3xl font-black mb-2 tracking-tight text-white">Siparişiniz Alındı!</h1>
-        <p className="text-zinc-400 mb-8 max-w-xs leading-relaxed">
-          Lezzetleriniz mutfağa başarıyla iletildi ve şu an şeflerimiz tarafından özenle hazırlanıyor <br/>(Status: Preparing).
-        </p>
-        <button
-          onClick={() => setIsOrderPlaced(false)}
-          className="px-8 py-3 bg-zinc-900 border border-zinc-800 rounded-full text-sm font-bold text-white hover:bg-zinc-800 transition-colors"
-        >
-          Menüye Geri Dön
-        </button>
-      </div>
-    );
-  }
+              return (
+                <div className="min-h-screen flex flex-col items-center justify-center bg-[#0A0A0A] text-zinc-100 p-6 text-center animate-in fade-in duration-700">
+                  <div className="w-24 h-24 bg-green-500/20 rounded-full flex items-center justify-center mb-6 animate-pulse">
+                    <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(34,197,94,0.5)]">
+                      <span className="text-3xl">👨‍🍳</span>
+                    </div>
+                  </div>
+                  <h1 className="text-3xl font-black mb-2 tracking-tight text-white">Siparişiniz Alındı!</h1>
+                  <p className="text-zinc-400 mb-8 max-w-xs leading-relaxed">
+                    Lezzetleriniz mutfağa başarıyla iletildi ve şu an şeflerimiz tarafından özenle hazırlanıyor <br/>(Status: Preparing).
+                  </p>
+                  <button
+                    onClick={() => setIsOrderPlaced(false)}
+                    className="px-8 py-3 bg-zinc-900 border border-zinc-800 rounded-full text-sm font-bold text-white hover:bg-zinc-800 transition-colors"
+                  >
+                    Menüye Geri Dön
+                  </button>
+                </div>
+              );
+            }
 
             return (
               <div key={catId} className="flex flex-col gap-3">
