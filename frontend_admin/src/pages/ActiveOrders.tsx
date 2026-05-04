@@ -1,89 +1,115 @@
 import React, { useState, useEffect } from 'react';
 import * as signalR from '@microsoft/signalr';
 import { ChefHat, Clock, CheckCircle, UtensilsCrossed } from 'lucide-react';
+import axios from 'axios';
 
 const HUB_URL = 'https://localhost:7057/orderHub';
 
-// Gelecek olan sipariş verisinin tipini belirliyoruz
+// Arayüz ve Veritabanı tiplerini eşliyoruz
 interface OrderItem {
   id: string;
   name: string;
   quantity: number;
-  price: number;
 }
 
 interface IncomingOrder {
-  orderId: string; // React tarafında benzersiz kılmak için
+  orderId: string;
   tableId: string;
+  tableName?: string; // Masa adı (Masa 1 gibi)
   details: OrderItem[];
   orderTime: Date;
   status: 'preparing' | 'ready';
 }
 
-const token = localStorage.getItem("token");
-const restaurantId = localStorage.getItem("restaurantId");
-
 const ActiveOrders: React.FC = () => {
   const [orders, setOrders] = useState<IncomingOrder[]>([]);
-  const [connection, setConnection] = useState<signalR.HubConnection | null>(null);
-
-  const RESTAURANT_ID = localStorage.getItem("restaurantId");
 
   useEffect(() => {
-    if(!RESTAURANT_ID){
-        console.error("giriş yapınız");
-        return;
-    }
-    const connectSignalR = async () => {
-      const newConnection = new signalR.HubConnectionBuilder()
-        .withUrl(HUB_URL)
-        .withAutomaticReconnect()
-        .build();
+    // 1. KASADAN VERİLERİ ÇEK
+    const restaurantId = localStorage.getItem("restaurantId");
+    const token = localStorage.getItem("token");
 
+    // 🛡️ GÜVENLİK DUVARI: Veriler yoksa veya 'undefined' ise dur!
+    if (!restaurantId || restaurantId === 'undefined' || !token) {
+      console.warn("⚠️ Oturum bilgileri eksik. İstek gönderilmedi.");
+      return; 
+    }
+
+    // 2. VERİTABANINDAN MEVCUT SİPARİŞLERİ ÇEK (FETCH)
+    const fetchExistingOrders = async () => {
+      try {
+        // Backend'deki OrderController endpoint'ine gidiyoruz
+        const response = await axios.get(`https://localhost:7057/api/Order/active/${restaurantId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        const mappedOrders = response.data.map((o: any) => ({
+          orderId: o.id || o.Id,
+          tableId: o.tableId || o.TableId,
+          tableName: o.tableName || o.TableName,
+          details: o.items || o.orderItems || [],
+          orderTime: new Date(o.createdTime || o.CreatedTime || o.createdAt),
+          status: 'preparing'
+        }));
+
+        setOrders(mappedOrders);
+        console.log("✅ DB'deki siparişler başarıyla yüklendi.");
+      } catch (err) {
+        console.error("🔴 Sipariş çekme hatası:", err);
+      }
+    };
+
+    // 3. SIGNALR İLE CANLI BAĞLANTIYI KUR
+    const newConnection = new signalR.HubConnectionBuilder()
+      .withUrl(HUB_URL)
+      .withAutomaticReconnect()
+      .build();
+
+    const startSignalR = async () => {
       try {
         await newConnection.start();
-        console.log("🟢 Mutfak SignalR Bağlantısı Başarılı!");
-        setConnection(newConnection);
+        console.log("🟢 SignalR Hub Bağlantısı Aktif.");
 
-        // 1. Mutfak ekranı, "Bu Restoranın" grubuna katılıyor
-        // C# tarafında SendOrder metodunda kullandığın grup adı: $"Restorant_{restaurantId}"
-        await newConnection.invoke("JoinGroup", `Restorant_${RESTAURANT_ID}`);
+        // Backend ile grup adının (Restorant_ vs Restaurant_) aynı olduğundan emin ol
+        await newConnection.invoke("JoinGroup", `Restorant_${restaurantId}`);
 
-        // 2. Müşteriden gelen "Yeni sipariş" bildirimini dinliyoruz
-        newConnection.on("Yeni sipariş", (data: { tableId: string, details: any[] }) => {
-          console.log("🔥 Yeni Sipariş Düştü!", data);
+        newConnection.on("Yeni sipariş", (data: any) => {
+          console.log("🔥 Anlık Sipariş Düştü:", data);
           
           const newOrder: IncomingOrder = {
-            orderId: data.orderId || data.OrderId || "bilinmeyen id", 
+            orderId: data.orderId || data.Id || Math.random().toString(),
             tableId: data.tableId || data.TableId,
-            details: data.details || data.Details,
+            details: data.details || data.Details || [],
             orderTime: new Date(),
             status: 'preparing'
           };
 
-          // Yeni gelen siparişi listeye ekle
-          setOrders(prevOrders => [...prevOrders, newOrder]);
+          setOrders(prev => [...prev, newOrder]);
         });
-
-      } catch (error) {
-        console.error("🔴 Mutfak SignalR Bağlantı Hatası:", error);
+      } catch (err) {
+        console.error("🔴 SignalR hatası:", err);
       }
     };
 
-    connectSignalR();
+    fetchExistingOrders();
+    startSignalR();
 
+    // Sayfa kapandığında bağlantıyı durdur
     return () => {
-      if (connection) {
-        connection.stop();
-      }
+      if (newConnection) newConnection.stop();
     };
-  }, []);
+  }, []); // Sadece sayfa açıldığında bir kez çalışır
 
-  // Siparişi tamamlandı olarak işaretleme fonksiyonu
-  const markAsReady = (orderId: string) => {
-    setOrders(prevOrders => prevOrders.filter(order => order.orderId !== orderId));
-    // İleride buraya: "Müşterinin ekranına 'Siparişiniz Hazır' bildirimi yolla" eklenebilir.
+  // Siparişi tamamla butonu için fonksiyon
+  const markAsReady = async (orderId: string) => {
+    try {
+      setOrders(prev => prev.filter(o => o.orderId !== orderId));
+      // Opsiyonel: Backend'e de "tamamlandı" isteği atılabilir
+    } catch (err) {
+      console.error("Sipariş güncellenemedi.");
+    }
   };
+
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-zinc-100 p-8 font-sans">

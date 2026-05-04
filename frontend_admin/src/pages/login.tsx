@@ -14,44 +14,48 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true); 
+
+    // 🛡️ 1. ÇİFT TIKLAMA KONTROLÜ
+    // Eğer halihazırda bir istek varsa, ikinciyi başlatma
+    if (isLoading) return;
+
+    setIsLoading(true);
 
     try {
-      const response = await axios.post("https://localhost:7057/api/auth/login", {
-        email,
-        password,
-      });
+        const response = await axios.post("https://localhost:7057/api/auth/login", { 
+            email, 
+            password 
+        });
+        
+        // 🕵️‍♂️ 2. VERİ DOĞRULAMA (HAYATİ ÖNEMDE!)
+        // Sadece ve sadece veri gelmişse kasaya dokunuyoruz
+        if (response.data && response.data.accessToken && response.data.restaurantId) {
+            const token = response.data.accessToken;
+            const restId = response.data.restaurantId;
 
-      const { 
-        accessToken, AccessToken, 
-        refreshToken, RefreshToken, 
-        restaurantId, RestaurantId 
-      } = response.data;
+            // Önce nükleer temizlik
+            localStorage.clear();
 
-      const token = accessToken || AccessToken;
-      const refresh = refreshToken || RefreshToken;
-      const restId = restaurantId || RestaurantId;
+            // Sonra sağlam veriyi yaz
+            localStorage.setItem("token", token);
+            localStorage.setItem("restaurantId", restId);
 
-      if (!restId || !token) {
-        throw new Error("Giriş bilgileri doğrulandı ancak restoran yetkisi alınamadı.");
-      }
-
-      localStorage.clear();
-
-      localStorage.setItem("token", token);
-      localStorage.setItem("refreshToken", refresh);
-      localStorage.setItem("restaurantId", restId);
-
-      navigate('/');
-      window.location.reload();
+            console.log("✅ Giriş başarılı, veriler kasaya kilitlendi.");
+            
+            // Reload yapmadan yumuşak geçiş
+            navigate('/'); 
+        } else {
+            console.error("❌ Sunucu başarılı döndü ama beklenen veriler pakette yok!");
+        }
 
     } catch (err: any) {
-      const errorMessage = err.response?.data?.Message || err.message || "Giriş işlemi başarısız oldu.";
-      alert(errorMessage);
+        console.error("❌ Giriş işlemi başarısız:", err);
+        alert("Giriş yapılamadı, lütfen bilgilerinizi kontrol edin.");
     } finally {
-      setIsLoading(false);
+        // İstek bittiğinde kilidi kaldır
+        setIsLoading(false);
     }
-  };
+};
 
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-slate-100 to-slate-200">
