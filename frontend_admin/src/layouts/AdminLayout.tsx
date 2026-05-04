@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import * as signalR from '@microsoft/signalr';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -32,52 +33,29 @@ const AdminLayout: React.FC = () => {
 
   // SİGNALR GLOBAL DİNLEYİCİ
   useEffect(() => {
-    const restaurantId = localStorage.getItem('restaurantId');
-    if (!restaurantId) return;
-
+    // 1. Bağlantıyı kur 
     const connection = new signalR.HubConnectionBuilder()
-      .withUrl("https://localhost:7057/orderHub")
+      .withUrl("https://localhost:7057/orderHub") 
       .withAutomaticReconnect()
       .build();
 
-    const startConnection = async () => {
-      try {
-        await connection.start();
-        await connection.invoke("JoinGroup", `Restorant_${restaurantId}`);
-        
-        connection.on("Yeni sipariş", (data: any) => {
-          // Bildirimi ekranda göster
-          setToast({
-            table: data.tableId || data.TableId,
-            time: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
-          });
-          
-          // Okunmamış bildirim sayısını artır
-          setUnreadCount(prev => prev + 1);
+    // 2. Bağlantıyı başlat
+    connection.start()
+      .then(() => console.log("Global Bildirim Servisi (Admin) Bağlandı!"))
+      .catch(err => console.error("Bağlantı hatası: ", err));
 
-          // 5 saniye sonra bildirimi ekrandan gizle
-          setTimeout(() => {
-            setToast(null);
-          }, 5000);
-        });
-
-      } catch (err) {
-        console.error("Global bildirim servisine bağlanılamadı:", err);
+    // 3. React bileşeni ekrandan kaldırırken bağlantıyı temizle
+    return () => {
+      if (connection) {
+        connection.stop();
       }
     };
-
-    startConnection();
-
-    return () => {
-      connection.stop();
-    };
-  }, []);
-
+  }, []); 
+  
   // Menü elemanlarımızı tanımlıyoruz
   const menuItems = [
     { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
     { path: '/orders', icon: Table, label: 'Aktif Siparişler' },
-    { path: '/table', icon: Table, label: 'Masa Doluluk' },
     { path: '/add-restaurant', icon: Store, label: 'Restorant' },
     { path: '/categories', icon: Coffee, label: 'Kategori Yönetimi' },
     { path: '/products', icon: Coffee, label: 'Ürün Yönetimi' },

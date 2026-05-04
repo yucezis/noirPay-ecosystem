@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'; // 1. Yönlendirme kancası ekle
 import { Mail, Lock, Eye, EyeOff, CreditCard, Utensils, ShoppingBag, TrendingUp } from 'lucide-react';
 import axios from 'axios';
 
-export default function LoginPage() { // 2. Fonksiyon adı App'ten LoginPage'e çevrildi
-  const navigate = useNavigate(); // 3. Yönlendirme objesi tanımlandı
+export default function LoginPage() { 
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,16 +19,33 @@ export default function LoginPage() { // 2. Fonksiyon adı App'ten LoginPage'e �
         password,
       });
 
-      const { accessToken, refreshToken } = response.data;
-      localStorage.setItem("token", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
+      const { 
+        accessToken, AccessToken, 
+        refreshToken, RefreshToken, 
+        restaurantId, RestaurantId 
+      } = response.data;
 
-      // 4. Başarılı giriş sonrası yönlendirme tetiklendi
+      const token = accessToken || AccessToken;
+      const refresh = refreshToken || RefreshToken;
+      const restId = restaurantId || RestaurantId;
+
+      if (!restId) {
+        throw new Error("Bu hesaba ait bir restoran kaydı bulunamadı.");
+      }
+
+      localStorage.clear();
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("refreshToken", refresh);
+      localStorage.setItem("restaurantId", restId);
+
       navigate('/');
+      
       window.location.reload();
 
-    } catch (err) {
-      alert("Giriş başarısız. Lütfen bilgilerinizi kontrol edin.");
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.Message || err.message || "Giriş işlemi başarısız oldu.";
+      alert(errorMessage);
     }
   };
 

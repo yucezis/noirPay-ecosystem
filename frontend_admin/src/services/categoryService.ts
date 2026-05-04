@@ -4,8 +4,16 @@ const API_URL = 'https://localhost:7057/api';
 
 export const getCategories = async (): Promise<Category[]> => {
   const token = localStorage.getItem('token'); 
-  
-  const response = await fetch(`${API_URL}/Category`, {
+  const restaurantId = localStorage.getItem('restaurantId'); // 1. Restoran ID'yi alıyoruz
+
+
+  if (!restaurantId || restaurantId === 'undefined' || restaurantId === 'null') {
+    localStorage.clear(); // Bozuk veriyi hemen sil
+    window.location.href = '/login'; // Kullanıcıyı zorla logine geri at
+    throw new Error('Geçersiz restoran bilgisi tespit edildi. Lütfen tekrar giriş yapın.');
+  }
+  // 2. URL'in sonuna ?restaurantId parametresini ekliyoruz
+  const response = await fetch(`${API_URL}/Category?restaurantId=${restaurantId}`, {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
@@ -18,14 +26,20 @@ export const getCategories = async (): Promise<Category[]> => {
 
 export const createCategory = async (categoryData: any) => {
   const token = localStorage.getItem('token');
-  
+  const restaurantId = localStorage.getItem('restaurantId');
+
+  const payload = {
+    ...categoryData,
+    restaurantId: restaurantId 
+  };
+
   const response = await fetch(`${API_URL}/Category`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(categoryData)
+    body: JSON.stringify(payload) 
   });
 
   if (!response.ok) throw new Error('Kategori eklenirken bir hata oluştu.');
@@ -34,14 +48,20 @@ export const createCategory = async (categoryData: any) => {
 
 export const updateCategory = async (id: string, categoryData: any) => {
   const token = localStorage.getItem('token');
-  
+  const restaurantId = localStorage.getItem('restaurantId');
+
+  const payload = {
+    ...categoryData,
+    restaurantId: restaurantId
+  };
+
   const response = await fetch(`${API_URL}/Category/${id}`, {
     method: 'PUT',
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(categoryData)
+    body: JSON.stringify(payload)
   });
 
   if (!response.ok) throw new Error('Kategori güncellenemedi.');
@@ -59,4 +79,3 @@ export const deleteCategory = async (id: string) => {
   if (!response.ok) throw new Error('Kategori silinemedi.');
   return response.json();
 };
-

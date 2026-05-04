@@ -23,10 +23,27 @@ const TableList: React.FC = () => {
     loadTables();
   }, []);
 
+  // TableList.tsx içindeki fonksiyon
   const handleAddTable = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await createTable(formData);
+      // LocalStorage'dan restoran ID'sini alıyoruz
+      const currentRestaurantId = localStorage.getItem('restaurantId');
+      
+      if (!currentRestaurantId) {
+        alert("Restoran kimliği bulunamadı. Lütfen tekrar giriş yapın.");
+        return;
+      }
+
+      // C# Table modeline tam uyumlu veriyi hazırlıyoruz
+      const payload = {
+        name: formData.name,
+        tableNo: formData.tableNo,
+        restaurantId: currentRestaurantId // C# modelindeki Guid RestaurantId
+      };
+
+      await createTable(payload); // Yeni payload'u gönderiyoruz
+      
       setIsModalOpen(false);
       setFormData({ name: '', tableNo: '' });
       loadTables();

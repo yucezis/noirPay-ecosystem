@@ -21,7 +21,7 @@ interface IncomingOrder {
 }
 
 localStorage.setItem("token", Response.token);
-localStorage.setItem("restaurantId", Response.restaurantId);
+const restaurantId = localStorage.getItem("restaurantId");
 
 const ActiveOrders: React.FC = () => {
   const [orders, setOrders] = useState<IncomingOrder[]>([]);

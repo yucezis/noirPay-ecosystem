@@ -81,7 +81,9 @@ namespace Noir.API.Hubs
             _context.Orders.Add(newOrder);
             await _context.SaveChangesAsync();
 
-            await Clients.Group($"Restorant_{restaurantId}").SendAsync("Yeni sipariş", new
+            string safeGroupId = $"Restorant_{restaurantId.ToLower()}";
+
+            await Clients.Group(safeGroupId).SendAsync("Yeni sipariş", new
             {
                 TableId = tableId,
                 Details = cartItems,

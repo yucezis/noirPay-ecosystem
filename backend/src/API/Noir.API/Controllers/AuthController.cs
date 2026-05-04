@@ -29,7 +29,6 @@ namespace Noir.API.Controllers
             if (user == null)
             {
                 return Unauthorized(new { message = "Eposta veya şifre hatalı" });
-
             }
 
             bool isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
@@ -38,8 +37,9 @@ namespace Noir.API.Controllers
                 return Unauthorized(new { message = "Eposta veya şifre hatalı" });
             }
 
-            string accessToken = _jwtProvider.GenerateToken(user.Id, user.Email);
+            var restaurant = await _context.Restaurants.FirstOrDefaultAsync(r => r.OwnerId == user.Id);
 
+            string accessToken = _jwtProvider.GenerateToken(user.Id, user.Email);
             string refreshToken = Guid.NewGuid().ToString();
 
             user.RefreshToken = refreshToken;
@@ -50,7 +50,8 @@ namespace Noir.API.Controllers
             return Ok(new AuthReponse
             {
                 AccessToken = accessToken,
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
+                RestaurantId = restaurant?.Id 
             });
         }
 

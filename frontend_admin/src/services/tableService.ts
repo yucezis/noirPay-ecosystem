@@ -2,14 +2,23 @@ const API_URL = 'https://localhost:7057/api';
 
 export const getTables = async () => {
   const token = localStorage.getItem('token');
-  const response = await fetch(`${API_URL}/Table`, {
+  const restaurantId = localStorage.getItem('restaurantId');
+  
+  const response = await fetch(`${API_URL}/Table?restaurantId=${restaurantId}`, {
     headers: { 'Authorization': `Bearer ${token}` }
   });
-  if (!response.ok) throw new Error('Masalar getirilemedi.');
+  
+  if (!restaurantId || restaurantId === 'undefined' || restaurantId === 'null') {
+    localStorage.clear(); // Bozuk veriyi hemen sil
+    window.location.href = '/login'; // Kullanıcıyı zorla logine geri at
+    throw new Error('Geçersiz restoran bilgisi tespit edildi. Lütfen tekrar giriş yapın.');
+  }
+  
   return response.json();
 };
 
-export const createTable = async (tableData: { name: string; tableNo: string }) => {
+// tableService.ts içindeki createTable fonksiyonu
+export const createTable = async (tableData: { name: string; tableNo: string; restaurantId: string }) => {
   const token = localStorage.getItem('token');
   const response = await fetch(`${API_URL}/Table`, {
     method: 'POST',
