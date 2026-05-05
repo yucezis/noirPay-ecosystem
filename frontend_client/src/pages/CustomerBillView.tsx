@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'; 
-import { Receipt, Bell, CreditCard, ArrowLeft, History, X, Users, PieChart, CheckSquare } from 'lucide-react';
+import { Receipt, Bell, CreditCard, ArrowLeft, History, X, Users, PieChart, CheckSquare, Plus, Minus } from 'lucide-react';
 import axios from 'axios';
 
 interface OrderItem {
@@ -22,6 +22,25 @@ export default function CustomerBillView() {
   const [loading, setLoading] = useState(true);
   const [isRequested, setIsRequested] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [modalView, setModalView] = useState<'options' | 'splitEqually'>('options');
+  const [numberOfPeople, setNumberOfPeople] = useState<number>(1); 
+  const [splitShares, setSplitShares] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (modalView === 'splitEqually' && tableId) {
+      const fetchSplit = async () => {
+        try {
+          const response = await axios.post(`https://localhost:7057/api/Order/split-equally/${tableId}`, {
+            numberOfPeople: numberOfPeople
+          });
+          setSplitShares(response.data.shares);
+        } catch (err) {
+          console.error("Bölme işlemi hesaplanamadı", err);
+        }
+      };
+      fetchSplit();
+    }
+  }, [numberOfPeople, modalView, tableId]);
 
   useEffect(() => {
     const fetchBill = async () => {
@@ -144,53 +163,128 @@ export default function CustomerBillView() {
       </main>
 
       {/* ÖDEME SEÇENEKLERİ MODALI */}
+      {/* 🌟 ÖDEME SEÇENEKLERİ MODALI 🌟 */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-4 sm:p-0 animate-in fade-in duration-200">
           <div className="bg-[#0D0D0D] border border-zinc-800 w-full max-w-sm rounded-3xl p-6 shadow-2xl animate-in slide-in-from-bottom-10 sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-300">
             
             {/* Modal Header */}
             <div className="flex justify-between items-center mb-6">
-              <div>
-                <h3 className="text-xl font-black text-white">Ödeme Yöntemi</h3>
-                <p className="text-xs text-zinc-500 mt-1">Lütfen ödeme şeklini seçin</p>
+              <div className="flex items-center gap-3">
+                {/* Alt Ekrana Geçtiysek Geri Butonu Çıksın */}
+                {modalView !== 'options' && (
+                  <button onClick={() => setModalView('options')} className="p-2 bg-zinc-900 rounded-full text-zinc-400 hover:text-white transition-colors">
+                    <ArrowLeft className="w-5 h-5" />
+                  </button>
+                )}
+                <div>
+                  <h3 className="text-xl font-black text-white">
+                    {modalView === 'options' ? 'Ödeme Yöntemi' : 'Bölerek Öde'}
+                  </h3>
+                  <p className="text-xs text-zinc-500 mt-1">
+                    {modalView === 'options' ? 'Lütfen ödeme şeklini seçin' : 'Hesap kaç kişiye bölünecek?'}
+                  </p>
+                </div>
               </div>
-              <button onClick={() => setIsModalOpen(false)} className="p-2 bg-zinc-900 rounded-full text-zinc-400 hover:text-white transition-colors">
+              <button 
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setTimeout(() => setModalView('options'), 300); // Kapandıktan sonra başa dön
+                }} 
+                className="p-2 bg-zinc-900 rounded-full text-zinc-400 hover:text-white transition-colors"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Modal Butonları */}
-            <div className="space-y-3">
-              <button className="w-full flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-colors group">
-                <div className="p-2 bg-zinc-800 rounded-xl group-hover:bg-zinc-700 transition-colors">
-                  <Users className="w-5 h-5 text-orange-500" />
-                </div>
-                <div className="flex flex-col items-start">
-                  <span className="text-sm font-bold text-white">Bölerek Öde</span>
-                  <span className="text-[10px] text-zinc-500">Hesabı kişi sayısına eşit bölün</span>
-                </div>
-              </button>
+            {/* 🌟 GÖRÜNÜM 1: ANA SEÇENEKLER (OPTIONS) */}
+            {modalView === 'options' && (
+              <div className="space-y-3 animate-in slide-in-from-left-4 fade-in duration-300">
+                
+                {/* İŞTE SENİN BUTONUN - ARTIK TIKLANABİLİR! */}
+                <button 
+                  onClick={() => setModalView('splitEqually')}
+                  className="w-full flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-colors group"
+                >
+                  <div className="p-2 bg-zinc-800 rounded-xl group-hover:bg-zinc-700 transition-colors">
+                    <Users className="w-5 h-5 text-orange-500" />
+                  </div>
+                  <div className="flex flex-col items-start">
+                    <span className="text-sm font-bold text-white">Bölerek Öde</span>
+                    <span className="text-[10px] text-zinc-500">Hesabı kişi sayısına eşit bölün</span>
+                  </div>
+                </button>
 
-              <button className="w-full flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-colors group">
-                <div className="p-2 bg-zinc-800 rounded-xl group-hover:bg-zinc-700 transition-colors">
-                  <PieChart className="w-5 h-5 text-orange-500" />
-                </div>
-                <div className="flex flex-col items-start">
-                  <span className="text-sm font-bold text-white">Belirli Bir Kısmını Öde</span>
-                  <span className="text-[10px] text-zinc-500">Kendi belirlediğiniz tutarı ödeyin</span>
-                </div>
-              </button>
+                {/* Diğer butonlar (Kısmı Öde, Ürün Seç) aynı kalıyor... */}
+                <button className="w-full flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-colors group">
+                  <div className="p-2 bg-zinc-800 rounded-xl group-hover:bg-zinc-700 transition-colors">
+                    <PieChart className="w-5 h-5 text-orange-500" />
+                  </div>
+                  <div className="flex flex-col items-start">
+                    <span className="text-sm font-bold text-white">Belirli Bir Kısmını Öde</span>
+                    <span className="text-[10px] text-zinc-500">Kendi belirlediğiniz tutarı ödeyin</span>
+                  </div>
+                </button>
 
-              <button className="w-full flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-colors group">
-                <div className="p-2 bg-zinc-800 rounded-xl group-hover:bg-zinc-700 transition-colors">
-                  <CheckSquare className="w-5 h-5 text-orange-500" />
+                <button className="w-full flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-colors group">
+                  <div className="p-2 bg-zinc-800 rounded-xl group-hover:bg-zinc-700 transition-colors">
+                    <CheckSquare className="w-5 h-5 text-orange-500" />
+                  </div>
+                  <div className="flex flex-col items-start">
+                    <span className="text-sm font-bold text-white">Ürün Seçerek Öde</span>
+                    <span className="text-[10px] text-zinc-500">Sadece yediklerinizi ödeyin</span>
+                  </div>
+                </button>
+              </div>
+            )}
+
+            {/* 🌟 GÖRÜNÜM 2: BÖLEREK ÖDE EKRANI */}
+            {modalView === 'splitEqually' && (
+              <div className="space-y-6 animate-in slide-in-from-right-4 fade-in duration-300">
+                
+                {/* Kişi Sayısı Seçici */}
+                <div className="flex items-center justify-between p-4 bg-zinc-900 border border-zinc-800 rounded-2xl">
+                  <span className="text-sm font-bold text-white">Kişi Sayısı</span>
+                  <div className="flex items-center gap-5">
+                    <button 
+                      onClick={() => setNumberOfPeople(Math.max(2, numberOfPeople - 1))}
+                      className="w-10 h-10 flex items-center justify-center bg-zinc-800 rounded-full text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors disabled:opacity-50"
+                      disabled={numberOfPeople <= 2}
+                    >
+                      <Minus className="w-5 h-5" />
+                    </button>
+                    <span className="font-black text-2xl text-white w-4 text-center">{numberOfPeople}</span>
+                    <button 
+                      onClick={() => setNumberOfPeople(numberOfPeople + 1)}
+                      className="w-10 h-10 flex items-center justify-center bg-zinc-800 rounded-full text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors"
+                    >
+                      <Plus className="w-5 h-5" />
+                    </button>
+                  </div>
                 </div>
-                <div className="flex flex-col items-start">
-                  <span className="text-sm font-bold text-white">Ürün Seçerek Öde</span>
-                  <span className="text-[10px] text-zinc-500">Sadece yediklerinizi ödeyin</span>
+
+                {/* Tutar Göstergesi */}
+                <div className="text-center p-6 bg-zinc-900/50 border border-zinc-800/50 rounded-2xl">
+                  <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold mb-2">Kişi Başı Tutar</p>
+                  <p className="text-4xl font-black text-white italic">
+                    {splitShares.length > 0 ? splitShares[0].toFixed(2) : '0.00'} <span className="text-xl text-zinc-500">TL</span>
+                  </p>
+                  
+                  {/* Algoritmamızın Kuruş Farkı Notu */}
+                  {splitShares.length > 0 && splitShares[0] !== splitShares[splitShares.length - 1] && (
+                    <p className="text-[10px] text-orange-500/80 mt-3 font-medium">
+                      * Yuvarlama farkı ({(splitShares[splitShares.length - 1] - splitShares[0]).toFixed(2)} TL) son ödeyen kişiye yansıtılacaktır.
+                    </p>
+                  )}
                 </div>
-              </button>
-            </div>
+
+                {/* Öde Butonu */}
+                <button className="w-full py-4 bg-white text-black font-black rounded-2xl hover:bg-zinc-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.1)] flex items-center justify-center gap-2">
+                  <CreditCard className="w-5 h-5" />
+                  ÖDEMEYE GEÇ
+                </button>
+              </div>
+            )}
 
           </div>
         </div>
