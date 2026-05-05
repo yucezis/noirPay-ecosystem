@@ -77,7 +77,6 @@ export default function CustomerBillView() {
         <section className="text-center space-y-2">
           <div className="flex items-center justify-center gap-2 mb-1">
             <span className="text-xs font-bold text-orange-500 uppercase tracking-widest">Adisyon Detayı</span>
-            {/* 🌟 isActive durumuna göre dinamik badge */}
             <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${isActive ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`}>
               {isActive ? 'Aktif' : 'Kapalı'}
             </span>
@@ -113,16 +112,16 @@ export default function CustomerBillView() {
         {/* Aksiyon Butonları */}
         <section className="grid grid-cols-1 gap-4">
           
-          {/* 🌟 1. ONLINE ÖDE BUTONU (MODALI AÇAR) */}
+          {/* 1. ONLINE ÖDE BUTONU (MODALI AÇAR) */}
           <button 
             onClick={() => setIsModalOpen(true)}
             className="flex items-center justify-center gap-3 py-5 bg-white text-black rounded-2xl font-black hover:bg-zinc-200 transition-all transform active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
           >
             <CreditCard className="w-5 h-5" />
-            ONLINE ÖDE (KART)
+            ONLINE ÖDE
           </button>
 
-          {/* 🌟 2. HESABI MASAYA GETİR BUTONU */}
+          {/* 2. HESABI MASAYA GETİR BUTONU */}
           <button 
             onClick={handleBringToTable}
             disabled={isRequested}
@@ -140,18 +139,11 @@ export default function CustomerBillView() {
 
         {/* NoirPuan Wildcard Özelliği */}
         <div className="p-4 bg-orange-500/5 border border-orange-500/10 rounded-2xl flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-orange-500/20 rounded-full flex items-center justify-center text-orange-500 font-black">N</div>
-            <div>
-              <p className="text-xs font-bold text-white uppercase">NoirPuan Bakiyesi</p>
-              <p className="text-[10px] text-zinc-500">Bu ödemeden +45 puan kazanacaksın.</p>
-            </div>
-          </div>
-          <span className="text-lg font-black text-orange-500">120</span>
+         
         </div>
       </main>
 
-      {/* 🌟 ÖDEME SEÇENEKLERİ MODALI 🌟 */}
+      {/* ÖDEME SEÇENEKLERİ MODALI */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-4 sm:p-0 animate-in fade-in duration-200">
           <div className="bg-[#0D0D0D] border border-zinc-800 w-full max-w-sm rounded-3xl p-6 shadow-2xl animate-in slide-in-from-bottom-10 sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-300">
@@ -167,7 +159,7 @@ export default function CustomerBillView() {
               </button>
             </div>
 
-            {/* Modal Butonları (Şimdilik İşlevsiz) */}
+            {/* Modal Butonları */}
             <div className="space-y-3">
               <button className="w-full flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-colors group">
                 <div className="p-2 bg-zinc-800 rounded-xl group-hover:bg-zinc-700 transition-colors">

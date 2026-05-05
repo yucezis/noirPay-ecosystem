@@ -15,10 +15,9 @@ const CustomerMenu: React.FC = () => {
   const [categories, setCategories] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   const [activeCategory, setActiveCategory] = useState<string>(''); 
   const [searchQuery, setSearchQuery] = useState('');
-  
   const [cart, setCart] = useState<any[]>([]);
   const [connection, setConnection] = useState<signalR.HubConnection | null>(null);
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
@@ -81,7 +80,6 @@ const CustomerMenu: React.FC = () => {
 
         const currentTableId = tableId || "A-01"; 
         const groupId = `${restaurantId}-${currentTableId}`;
-
         await newConnection.invoke("JoinGroup", groupId);
 
         newConnection.on("ReceiveCartUpdate", (updatedCart: any[]) => {
@@ -136,7 +134,6 @@ const CustomerMenu: React.FC = () => {
     const currentTableId = tableId || "A-01";
     navigate(`/bill/${currentTableId}`);
   };
-
   const addToCart = (product: any) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find(item => (item.id || item.Id) === (product.id || product.Id));
