@@ -102,5 +102,43 @@ namespace Noir.API.Controllers
                 Shares = splitResult
             });
         }
+
+        [HttpPost("pay-selected-item/{tableId}")]
+        public async Task<IActionResult> PaySelectedItem(Guid tableId, [FromBody] PayItemsRequest request)
+        {
+            if (request.ItemIds == null || !request.ItemIds.Any()) return BadRequest(new { message = "Lütfen ödenecek ürünleri seçiniz" });
+
+            var activeOrder = await _context.Orders.Include(o=>o.OrderItems)
+                .FirstOrDefaultAsync(o => o.TableId == tableId && o.IsActive);
+
+            if(activeOrder == null) return NotFound(new {message="Bu masada aktif bir hesap bulunamadı"});
+
+            var itemsToPay = activeOrder.OrderItems
+                .Where(i => request.ItemIds.Contains(i.Id) && !i.IsPaid)
+                .ToList();
+
+
+            if (!itemsToPay.Any())
+                return BadRequest(new { message = "Seçilen ürünler bulunamadı veya zaten ödenmiş." });
+
+            foreach (var item in itemsToPay)
+            {
+                item.IsPaid = true;
+            }
+
+            bool AllItemsPaid = activeOrder.OrderItems.All(i=>i.IsPaid);
+
+            if(AllItemsPaid) activeOrder.IsActive = false;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                Message = "Seçilen ürünlerin ödemesi başarıyla alındı.",
+                PaidItemsCount = itemsToPay.Count,
+                IsTableClosed = AllItemsPaid
+            });
+        }
+
     }
 }
