@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.SignalR;
 using Noir.API.Hubs;
 
 
+
 namespace Noir.API.Controllers
 {
 
@@ -72,7 +73,7 @@ namespace Noir.API.Controllers
         }
 
         [HttpPost("split-equally/{tableId}")]
-        public async Task<IActionResult> SplitBillEqually(string tableId, [FromBody] SplitEquallyRequest request)
+        public async Task<IActionResult> SplitBillEqually(Guid tableId, [FromBody] SplitEquallyRequest request)
         {
             var activeOrder = await _context.Orders.FirstOrDefaultAsync(o => o.TableId == tableId && o.IsActive);
 
