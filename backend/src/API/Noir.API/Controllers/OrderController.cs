@@ -70,5 +70,36 @@ namespace Noir.API.Controllers
 
             return Ok(new { Message = "Sipariş başarıyla tamamlandı ve arşivlendi." });
         }
+
+        [HttpPost("split-equally/{tableId}")]
+        public async Task<IActionResult> SplitBillEqually(string tableId, [FromBody] SplitEquallyRequest request)
+        {
+            var activeOrder = await _context.Orders.FirstOrDefaultAsync(o => o.TableId == tableId && o.IsActive);
+
+            if (activeOrder == null)
+                return NotFound(new { message = "Bu masada aktif bir hesap bulunamadı" });
+
+            decimal totalAmount = activeOrder.TotalAmount;
+            int peopleCount = request.NumberOfPeople;
+
+            decimal baseShare = Math.Round(totalAmount / peopleCount, 2, MidpointRounding.ToZero);
+            decimal kalan = totalAmount - (baseShare * peopleCount);
+
+            var splitResult = new List<Decimal>();
+
+            for (int i = 0; i < peopleCount; i++)
+            {
+                if(i == peopleCount - 1) splitResult.Add(baseShare+kalan);
+                else splitResult.Add(baseShare);
+            }
+
+            return Ok(new
+            {
+                TableId = tableId,
+                TotalAmount = totalAmount,
+                NumberOfPeople = peopleCount,
+                Shares = splitResult
+            });
+        }
     }
 }
