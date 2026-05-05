@@ -1,37 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // 🌟 EKLENDİ: Yönlendirme için
-import { Search, ShoppingBag, ChevronRight, Loader2, Plus, Minus, Receipt } from 'lucide-react'; // 🌟 EKLENDİ: Receipt ikonu
+import { useNavigate, useParams } from 'react-router-dom'; // 🌟 useParams EKLENDİ
+import { Search, ShoppingBag, ChevronRight, Loader2, Plus, Minus, Receipt } from 'lucide-react';
 import * as signalR from '@microsoft/signalr';
 
 const API_URL = 'https://localhost:7057/api';
 const HUB_URL = 'https://localhost:7057/OrderHub'; 
 
 const CustomerMenu: React.FC = () => {
-  const navigate = useNavigate(); // 🌟 EKLENDİ: Router aracı
+  const navigate = useNavigate(); 
+  
+  const { restaurantId, tableId } = useParams<{ restaurantId: string, tableId: string }>();
 
-  // --- API Veri State'leri ---
   const [restaurant, setRestaurant] = useState<any>(null);
   const [categories, setCategories] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   
-  // --- Kullanıcı Etkileşim State'leri ---
   const [activeCategory, setActiveCategory] = useState<string>(''); 
   const [searchQuery, setSearchQuery] = useState('');
   
-  // --- SEPET VE SIGNALR STATE'LERİ ---
   const [cart, setCart] = useState<any[]>([]);
   const [connection, setConnection] = useState<signalR.HubConnection | null>(null);
   const [isOrderPlaced, setIsOrderPlaced] = useState(false);
 
-  // ... (1. DATA FETCHING ve 2. SIGNALR BAĞLANTISI kodların tamamen aynı kalıyor) ...
   useEffect(() => {
     const fetchMenuData = async () => {
       try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const urlRestaurantId = urlParams.get('restaurantId'); 
-        
-        if (!urlRestaurantId) {
+        if (!restaurantId) {
            setRestaurant({ name: "Hata", location: "Lütfen geçerli bir QR kod okutun." });
            setLoading(false);
            return; 
@@ -44,9 +39,9 @@ const CustomerMenu: React.FC = () => {
         };
 
         const [categoryRes, productRes, restRes] = await Promise.all([
-          fetch(`${API_URL}/Category?restaurantId=${urlRestaurantId}`, { headers }),
-          fetch(`${API_URL}/Product?restaurantId=${urlRestaurantId}`, { headers }),
-          fetch(`${API_URL}/Restaurant/${urlRestaurantId}`, { headers })
+          fetch(`${API_URL}/Category?restaurantId=${restaurantId}`, { headers }),
+          fetch(`${API_URL}/Product?restaurantId=${restaurantId}`, { headers }),
+          fetch(`${API_URL}/Restaurant/${restaurantId}`, { headers })
         ]);
 
         const categoryData = await categoryRes.json();
@@ -71,7 +66,7 @@ const CustomerMenu: React.FC = () => {
     };
     
     fetchMenuData();
-  }, []);
+  }, [restaurantId]);
 
   useEffect(() => {
     const connectSignalR = async () => {
@@ -84,10 +79,8 @@ const CustomerMenu: React.FC = () => {
         await newConnection.start();
         setConnection(newConnection);
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const urlRestaurantId = urlParams.get('restaurantId');
-        const tableId = urlParams.get('tableId') || "A-01"; 
-        const groupId = `${urlRestaurantId}-${tableId}`;
+        const currentTableId = tableId || "A-01"; 
+        const groupId = `${restaurantId}-${currentTableId}`;
 
         await newConnection.invoke("JoinGroup", groupId);
 
@@ -113,15 +106,13 @@ const CustomerMenu: React.FC = () => {
         connection.stop();
       }
     };
-  }, []);
+  }, [restaurantId, tableId]);
 
   const broadcastCartUpdate = async (newCart: any[]) => {
     if (connection && connection.state === signalR.HubConnectionState.Connected) {
       try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const urlRestaurantId = urlParams.get('restaurantId');
-        const tableId = urlParams.get('tableId') || "A-01"; 
-        const groupId = `${urlRestaurantId}-${tableId}`;
+        const currentTableId = tableId || "A-01"; 
+        const groupId = `${restaurantId}-${currentTableId}`;
         
         await connection.invoke("UpdateCart", groupId, newCart);
       } catch (error) {
@@ -134,24 +125,18 @@ const CustomerMenu: React.FC = () => {
     if (cart.length === 0 || !connection) return;
 
     try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const urlRestaurantId = String(urlParams.get('restaurantId'));
-      const tableId = urlParams.get('tableId') || "A-01"; 
-
-      await connection.invoke("SendOrder", urlRestaurantId, tableId, cart);
+      const currentTableId = tableId || "A-01"; 
+      await connection.invoke("SendOrder", restaurantId, currentTableId, cart);
     } catch (error) {
       alert("Bağlantı hatası: Siparişiniz iletilemedi.");
     }
   };
 
-  // 🌟 EKLENDİ: HESABIM SAYFASINA GİTME FONKSİYONU
   const handleGoToBill = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const tableId = urlParams.get('tableId') || "A-01";
-    navigate(`/bill/${tableId}`);
+    const currentTableId = tableId || "A-01";
+    navigate(`/bill/${currentTableId}`);
   };
 
-  // ... (Sepet ve Render kodların aynı) ...
   const addToCart = (product: any) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find(item => (item.id || item.Id) === (product.id || product.Id));

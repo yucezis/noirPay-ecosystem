@@ -6,7 +6,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<CustomerMenu />} />
+        <Route path="/menu/:restaurantId/:tableId" element={<CustomerMenu />} />
 
         <Route path="/bill/:tableId" element={<CustomerBillView />} />
 
