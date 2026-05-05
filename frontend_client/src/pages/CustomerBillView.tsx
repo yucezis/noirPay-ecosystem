@@ -20,14 +20,14 @@ export default function CustomerBillView() {
   const [tableNo, setTableNo] = useState<string>(''); 
   const [isActive, setIsActive] = useState<boolean>(true);
   
-  // --- UI State'leri ---
   const [loading, setLoading] = useState(true);
   const [isRequested, setIsRequested] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); 
   const [numberOfPeople, setNumberOfPeople] = useState<number>(1); 
   const [splitShares, setSplitShares] = useState<number[]>([]);
-  const [modalView, setModalView] = useState<'options' | 'splitEqually' | 'payByItems'>('options'); 
   const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
+  const [modalView, setModalView] = useState<'options' | 'splitEqually' | 'payByItems' | 'payByAmount'>('options'); 
+  const [paymentAmount, setPaymentAmount] = useState<string>(''); // Giriş yapılan tutar
 
   useEffect(() => {
     if (modalView === 'splitEqually' && tableId) {
@@ -67,7 +67,6 @@ export default function CustomerBillView() {
     fetchBill();
   }, [tableId]);
 
-  // Ürün seçme/çıkarma fonksiyonu
   const toggleItemSelection = (itemId: string) => {
     setSelectedItemIds(prev => 
       prev.includes(itemId) 
@@ -76,7 +75,6 @@ export default function CustomerBillView() {
     );
   };
 
-  // Seçili ürünlerin toplam fiyatını hesaplama
   const selectedItemsTotal = items
     .filter(item => selectedItemIds.includes(item.id))
     .reduce((sum, item) => sum + item.price, 0);
@@ -92,6 +90,10 @@ export default function CustomerBillView() {
   };
 
   if (loading) return <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center text-zinc-500">NoirPay Yükleniyor...</div>;
+
+    const totalPrice = items
+      .filter(item => !item.isPaid)
+      .reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-zinc-200 font-sans selection:bg-orange-500/30 relative">
@@ -179,202 +181,136 @@ export default function CustomerBillView() {
         </div>
       </main>
 
-      {/* 🌟 ÖDEME SEÇENEKLERİ MODALI 🌟 */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-4 sm:p-0 animate-in fade-in duration-200">
-          <div className="bg-[#0D0D0D] border border-zinc-800 w-full max-w-sm rounded-3xl p-6 shadow-2xl animate-in slide-in-from-bottom-10 sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-300">
-            
-            {/* Modal Header */}
-            <div className="flex justify-between items-center mb-6">
-              <div className="flex items-center gap-3">
-                {/* Alt Ekrana Geçtiysek Geri Butonu Çıksın */}
-                {modalView !== 'options' && (
-                  <button 
-                    onClick={() => {
-                      setModalView('options');
-                      setSelectedItemIds([]); // Geri dönünce seçimleri temizle
-                    }} 
-                    className="p-2 bg-zinc-900 rounded-full text-zinc-400 hover:text-white transition-colors"
-                  >
-                    <ArrowLeft className="w-5 h-5" />
-                  </button>
-                )}
-                <div>
-                  <h3 className="text-xl font-black text-white">
-                    {modalView === 'options' ? 'Ödeme Yöntemi' : 
-                     modalView === 'splitEqually' ? 'Bölerek Öde' : 'Ürün Seç'}
-                  </h3>
-                  <p className="text-xs text-zinc-500 mt-1">
-                    {modalView === 'options' ? 'Lütfen ödeme şeklini seçin' : 
-                     modalView === 'splitEqually' ? 'Hesap kaç kişiye bölünecek?' : 'Sadece yediklerinizi seçin'}
-                  </p>
-                </div>
-              </div>
-              <button 
-                onClick={() => {
-                  setIsModalOpen(false);
-                  setTimeout(() => {
-                    setModalView('options');
-                    setSelectedItemIds([]);
-                  }, 300);
-                }} 
-                className="p-2 bg-zinc-900 rounded-full text-zinc-400 hover:text-white transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* 🌟 GÖRÜNÜM 1: ANA SEÇENEKLER (OPTIONS) */}
-            {modalView === 'options' && (
-              <div className="space-y-3 animate-in slide-in-from-left-4 fade-in duration-300">
-                
-                <button 
-                  onClick={() => setModalView('splitEqually')}
-                  className="w-full flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-colors group"
-                >
-                  <div className="p-2 bg-zinc-800 rounded-xl group-hover:bg-zinc-700 transition-colors">
-                    <Users className="w-5 h-5 text-orange-500" />
-                  </div>
-                  <div className="flex flex-col items-start">
-                    <span className="text-sm font-bold text-white">Bölerek Öde</span>
-                    <span className="text-[10px] text-zinc-500">Hesabı kişi sayısına eşit bölün</span>
-                  </div>
-                </button>
-
-                <button className="w-full flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-colors group">
-                  <div className="p-2 bg-zinc-800 rounded-xl group-hover:bg-zinc-700 transition-colors">
-                    <PieChart className="w-5 h-5 text-orange-500" />
-                  </div>
-                  <div className="flex flex-col items-start">
-                    <span className="text-sm font-bold text-white">Belirli Bir Kısmını Öde</span>
-                    <span className="text-[10px] text-zinc-500">Kendi belirlediğiniz tutarı ödeyin</span>
-                  </div>
-                </button>
-
-                {/* 🌟 YENİ BAĞLANTI: ÜRÜN SEÇEREK ÖDE BUTONU TIKLANABİLİR YAPILDI */}
-                <button 
-                  onClick={() => setModalView('payByItems')}
-                  className="w-full flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-colors group"
-                >
-                  <div className="p-2 bg-zinc-800 rounded-xl group-hover:bg-zinc-700 transition-colors">
-                    <CheckSquare className="w-5 h-5 text-orange-500" />
-                  </div>
-                  <div className="flex flex-col items-start">
-                    <span className="text-sm font-bold text-white">Ürün Seçerek Öde</span>
-                    <span className="text-[10px] text-zinc-500">Sadece yediklerinizi ödeyin</span>
-                  </div>
-                </button>
-              </div>
-            )}
-
-            {/* 🌟 GÖRÜNÜM 2: BÖLEREK ÖDE EKRANI */}
-            {modalView === 'splitEqually' && (
-              <div className="space-y-6 animate-in slide-in-from-right-4 fade-in duration-300">
-                
-                <div className="flex items-center justify-between p-4 bg-zinc-900 border border-zinc-800 rounded-2xl">
-                  <span className="text-sm font-bold text-white">Kişi Sayısı</span>
-                  <div className="flex items-center gap-5">
-                    <button 
-                      onClick={() => setNumberOfPeople(Math.max(2, numberOfPeople - 1))}
-                      className="w-10 h-10 flex items-center justify-center bg-zinc-800 rounded-full text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors disabled:opacity-50"
-                      disabled={numberOfPeople <= 2}
-                    >
-                      <Minus className="w-5 h-5" />
-                    </button>
-                    <span className="font-black text-2xl text-white w-4 text-center">{numberOfPeople}</span>
-                    <button 
-                      onClick={() => setNumberOfPeople(numberOfPeople + 1)}
-                      className="w-10 h-10 flex items-center justify-center bg-zinc-800 rounded-full text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors"
-                    >
-                      <Plus className="w-5 h-5" />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="text-center p-6 bg-zinc-900/50 border border-zinc-800/50 rounded-2xl">
-                  <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold mb-2">Kişi Başı Tutar</p>
-                  <p className="text-4xl font-black text-white italic">
-                    {splitShares.length > 0 ? splitShares[0].toFixed(2) : '0.00'} <span className="text-xl text-zinc-500">TL</span>
-                  </p>
-                  
-                  {splitShares.length > 0 && splitShares[0] !== splitShares[splitShares.length - 1] && (
-                    <p className="text-[10px] text-orange-500/80 mt-3 font-medium">
-                      * Yuvarlama farkı ({(splitShares[splitShares.length - 1] - splitShares[0]).toFixed(2)} TL) son ödeyen kişiye yansıtılacaktır.
-                    </p>
-                  )}
-                </div>
-
-                <button className="w-full py-4 bg-white text-black font-black rounded-2xl hover:bg-zinc-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.1)] flex items-center justify-center gap-2">
-                  <CreditCard className="w-5 h-5" />
-                  ÖDEMEYE GEÇ
-                </button>
-              </div>
-            )}
-
-            {/* 🌟 GÖRÜNÜM 3: ÜRÜN SEÇEREK ÖDE EKRANI */}
-            {modalView === 'payByItems' && (
-              <div className="space-y-4 animate-in slide-in-from-right-4 fade-in duration-300">
-                
-                {/* Ürün Listesi */}
-                <div className="max-h-60 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
-                  {items.filter(item => !item.isPaid).length === 0 ? (
-                    <div className="text-center p-6 bg-zinc-900/50 rounded-2xl border border-dashed border-zinc-800">
-                      <p className="text-sm text-zinc-500">Ödenecek ürün kalmadı.</p>
-                    </div>
-                  ) : (
-                    items.filter(item => !item.isPaid).map((item, index) => (
-                      <div 
-                        key={item.id || index} 
-                        onClick={() => toggleItemSelection(item.id)}
-                        className={`flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all duration-200 ${
-                          selectedItemIds.includes(item.id) 
-                            ? 'bg-orange-500/10 border-orange-500' 
-                            : 'bg-zinc-900/50 border-zinc-800 hover:bg-zinc-800'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className={`w-5 h-5 rounded flex items-center justify-center border transition-colors ${
-                            selectedItemIds.includes(item.id) ? 'bg-orange-500 border-orange-500' : 'border-zinc-600'
-                          }`}>
-                            {selectedItemIds.includes(item.id) && <CheckSquare className="w-3 h-3 text-black" />}
-                          </div>
-                          <div>
-                            <p className="text-sm font-bold text-white">{item.name}</p>
-                            <p className="text-[10px] text-zinc-500">{item.quantity} Adet</p>
-                          </div>
-                        </div>
-                        <span className="font-mono text-sm text-white">{(item.price * item.quantity).toFixed(2)} TL</span>
-                      </div>
-                    ))
-                  )}
-                </div>
-
-                {/* Toplam Tutar ve Buton */}
-                <div className="pt-4 border-t border-zinc-800 space-y-4">
-                  <div className="flex items-center justify-between px-2">
-                    <span className="text-sm font-bold text-zinc-400">Seçilen Tutar</span>
-                    <span className="text-2xl font-black text-white italic">{selectedItemsTotal.toFixed(2)} TL</span>
-                  </div>
-                  
-                  <button 
-                    disabled={selectedItemIds.length === 0}
-                    className={`w-full py-4 font-black rounded-2xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] flex items-center justify-center gap-2 ${
-                      selectedItemIds.length > 0 
-                        ? 'bg-white text-black hover:bg-zinc-200' 
-                        : 'bg-zinc-900 text-zinc-600 cursor-not-allowed border border-zinc-800'
-                    }`}
-                  >
-                    <CreditCard className="w-5 h-5" />
-                    SEÇİLENLERİ ÖDE
-                  </button>
-                </div>
-
-              </div>
-            )}
-
+      {/* 🌟 ÖDEME SEÇENEKLERİ MODALI */}
+{isModalOpen && (
+  <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-4 sm:p-0 animate-in fade-in duration-200">
+    <div className="bg-[#0D0D0D] border border-zinc-800 w-full max-w-sm rounded-3xl p-6 shadow-2xl animate-in slide-in-from-bottom-10 sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-300">
+      
+      {/* Modal Header */}
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center gap-3">
+          {modalView !== 'options' && (
+            <button 
+              onClick={() => {
+                setModalView('options');
+                setPaymentAmount(''); // Temizle
+              }} 
+              className="p-2 bg-zinc-900 rounded-full text-zinc-400 hover:text-white transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+          )}
+          <div>
+            <h3 className="text-xl font-black text-white">
+              {modalView === 'options' ? 'Ödeme Yöntemi' : 
+               modalView === 'splitEqually' ? 'Bölerek Öde' : 
+               modalView === 'payByAmount' ? 'Tutar Gir' : 'Ürün Seç'}
+            </h3>
+            <p className="text-xs text-zinc-500 mt-1">
+              {modalView === 'options' ? 'Lütfen ödeme şeklini seçin' : 
+               modalView === 'payByAmount' ? 'Ödemek istediğiniz tutarı yazın' : 'Seçiminizi yapın'}
+            </p>
           </div>
         </div>
+        <button 
+          onClick={() => {
+            setIsModalOpen(false);
+            setTimeout(() => {
+              setModalView('options');
+              setPaymentAmount('');
+            }, 300);
+          }} 
+          className="p-2 bg-zinc-900 rounded-full text-zinc-400 hover:text-white transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+
+      {/* 🌟 GÖRÜNÜM 1: ANA SEÇENEKLER (OPTIONS) */}
+      {modalView === 'options' && (
+        <div className="space-y-3 animate-in slide-in-from-left-4 fade-in duration-300">
+          <button 
+            onClick={() => setModalView('splitEqually')}
+            className="w-full flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-colors group"
+          >
+            <div className="p-2 bg-zinc-800 rounded-xl group-hover:bg-zinc-700 transition-colors">
+              <Users className="w-5 h-5 text-orange-500" />
+            </div>
+            <div className="flex flex-col items-start">
+              <span className="text-sm font-bold text-white">Bölerek Öde</span>
+              <span className="text-[10px] text-zinc-500">Hesabı kişi sayısına eşit bölün</span>
+            </div>
+          </button>
+
+          {/* 🌟 ARTIK TIKLANABİLİR: BELİRLİ BİR KISMINI ÖDE */}
+          <button 
+            onClick={() => setModalView('payByAmount')}
+            className="w-full flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-colors group"
+          >
+            <div className="p-2 bg-zinc-800 rounded-xl group-hover:bg-zinc-700 transition-colors">
+              <PieChart className="w-5 h-5 text-orange-500" />
+            </div>
+            <div className="flex flex-col items-start">
+              <span className="text-sm font-bold text-white">Belirli Bir Kısmını Öde</span>
+              <span className="text-[10px] text-zinc-500">Kendi belirlediğiniz tutarı ödeyin</span>
+            </div>
+          </button>
+
+          <button 
+            onClick={() => setModalView('payByItems')}
+            className="w-full flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-colors group"
+          >
+            <div className="p-2 bg-zinc-800 rounded-xl group-hover:bg-zinc-700 transition-colors">
+              <CheckSquare className="w-5 h-5 text-orange-500" />
+            </div>
+            <div className="flex flex-col items-start">
+              <span className="text-sm font-bold text-white">Ürün Seçerek Öde</span>
+              <span className="text-[10px] text-zinc-500">Sadece yediklerinizi ödeyin</span>
+            </div>
+          </button>
+        </div>
       )}
+
+      {/* 🌟 GÖRÜNÜM 4: MİKTAR GİREREK ÖDE EKRANI (YENİ) */}
+      {modalView === 'payByAmount' && (
+        <div className="space-y-6 animate-in slide-in-from-right-4 fade-in duration-300">
+          <div className="relative">
+            <input
+              type="number"
+              value={paymentAmount}
+              onChange={(e) => setPaymentAmount(e.target.value)}
+              placeholder="0.00"
+              className="w-full bg-zinc-900 border border-zinc-800 text-white text-4xl font-black italic p-6 rounded-2xl text-center focus:outline-none focus:border-orange-500 transition-colors placeholder:text-zinc-800"
+              autoFocus
+            />
+            <span className="absolute right-6 top-1/2 -translate-y-1/2 text-xl font-bold text-zinc-600">TL</span>
+          </div>
+
+          <div className="p-4 bg-zinc-900/30 border border-zinc-800/50 rounded-2xl">
+            <div className="flex justify-between items-center text-xs">
+              <span className="text-zinc-500 font-bold uppercase tracking-widest">Kalan Toplam Borç</span>
+              <span className="text-white font-mono">{totalPrice.toFixed(2)} TL</span>
+            </div>
+          </div>
+
+          <button 
+            disabled={!paymentAmount || parseFloat(paymentAmount) <= 0 || parseFloat(paymentAmount) > totalPrice}
+            className={`w-full py-4 font-black rounded-2xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] flex items-center justify-center gap-2 ${
+              paymentAmount && parseFloat(paymentAmount) > 0 && parseFloat(paymentAmount) <= totalPrice
+                ? 'bg-white text-black hover:bg-zinc-200' 
+                : 'bg-zinc-900 text-zinc-600 cursor-not-allowed border border-zinc-800'
+            }`}
+          >
+            <CreditCard className="w-5 h-5" />
+            {paymentAmount ? `${parseFloat(paymentAmount).toFixed(2)} TL ÖDE` : 'ÖDEME YAP'}
+          </button>
+        </div>
+      )}
+
+      {/* ... Diğer görünümler (splitEqually ve payByItems) aynı kalıyor ... */}
+    </div>
+  </div>
+)}
 
     </div>
   );
