@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Receipt, Bell, CreditCard, ArrowLeft, History } from 'lucide-react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 interface OrderItem {
   name: string;
@@ -8,11 +9,12 @@ interface OrderItem {
   price: number;
 }
 
-export default function CustomerBillView({ tableId }: { tableId: string }) {
+export default function CustomerBillView() {
   const [items, setItems] = useState<OrderItem[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [isRequested, setIsRequested] = useState(false);
+  const { tableId } = useParams<{ tableId: string }>();
 
   useEffect(() => {
     // 1. Masadaki güncel hesabı çek
@@ -107,20 +109,13 @@ export default function CustomerBillView({ tableId }: { tableId: string }) {
 
           <button className="flex items-center justify-center gap-3 py-5 bg-zinc-900 border border-zinc-800 text-white rounded-2xl font-bold hover:bg-zinc-800 transition-colors">
             <CreditCard className="w-5 h-5" />
-            ONLINE ÖDE (KART)
+            ONLINE ÖDE
           </button>
         </section>
 
         {/* NoirPuan Wildcard Özelliği */}
         <div className="p-4 bg-orange-500/5 border border-orange-500/10 rounded-2xl flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-orange-500/20 rounded-full flex items-center justify-center text-orange-500 font-black">N</div>
-            <div>
-              <p className="text-xs font-bold text-white uppercase">NoirPuan Bakiyesi</p>
-              <p className="text-[10px] text-zinc-500">Bu ödemeden +45 puan kazanacaksın.</p>
-            </div>
-          </div>
-          <span className="text-lg font-black text-orange-500">120</span>
+         
         </div>
       </main>
     </div>
