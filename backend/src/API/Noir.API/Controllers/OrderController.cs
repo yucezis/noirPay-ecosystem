@@ -70,24 +70,5 @@ namespace Noir.API.Controllers
 
             return Ok(new { Message = "Sipariş başarıyla tamamlandı ve arşivlendi." });
         }
-
-        [HttpPost("request-bill/{tableId}")]
-        public async Task<IActionResult> RequestBill(Guid tableId)
-        {
-            var order = await _context.Orders
-                .FirstOrDefaultAsync(o => o.TableId == tableId && o.IsActive);
-
-            if (order == null) return NotFound(new { Message = "Aktif hesap bulunamadı." });
-
-            await _hubContext.Clients.Group($"Restaurant_{order.RestaurantId}")
-                .SendAsync("BillRequested", new
-                {
-                    TableId = tableId,
-                    TableName = order.Table?.Name,
-                    TotalAmount = order.TotalAmount
-                });
-
-            return Ok(new { Message = "Hesap talebi iletildi." });
-        }
     }
 }

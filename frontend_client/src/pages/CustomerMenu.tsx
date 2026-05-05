@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom'; 
-import { Search, ShoppingBag, ChevronRight, Loader2, Plus, Minus, Receipt } from 'lucide-react'; 
+import { useNavigate, useParams } from 'react-router-dom'; // 🌟 useParams EKLENDİ
+import { Search, ShoppingBag, ChevronRight, Loader2, Plus, Minus, Receipt } from 'lucide-react';
 import * as signalR from '@microsoft/signalr';
 
 const API_URL = 'https://localhost:7057/api';
@@ -15,6 +15,7 @@ const CustomerMenu: React.FC = () => {
   const [categories, setCategories] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
   const [activeCategory, setActiveCategory] = useState<string>(''); 
   const [searchQuery, setSearchQuery] = useState('');
   const [cart, setCart] = useState<any[]>([]);
@@ -103,7 +104,7 @@ const CustomerMenu: React.FC = () => {
         connection.stop();
       }
     };
-  }, [restaurantId, tableId]); 
+  }, [restaurantId, tableId]);
 
   const broadcastCartUpdate = async (newCart: any[]) => {
     if (connection && connection.state === signalR.HubConnectionState.Connected) {
@@ -133,7 +134,6 @@ const CustomerMenu: React.FC = () => {
     const currentTableId = tableId || "A-01";
     navigate(`/bill/${currentTableId}`);
   };
-  
   const addToCart = (product: any) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find(item => (item.id || item.Id) === (product.id || product.Id));
