@@ -140,5 +140,60 @@ namespace Noir.API.Controllers
             });
         }
 
+        [HttpPost("pay-by-amount/{tableId}")]
+        public async Task<IActionResult> PayByAmount(Guid tableId, [FromBody] PayAmountRequest request)
+        {
+            if (request.Amount <= 0) return BadRequest(new { message = "Lütfen geçerli bir ödeme tutarı giriniz." });
+
+            var activeOrder = await _context.Orders
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.TableId == tableId && o.IsActive);
+
+            if (activeOrder == null)
+                return NotFound(new { message = "Bu masada aktif bir hesap bulunamadı." });
+
+            var unpaidItems = activeOrder.OrderItems
+                .Where(i => !i.IsPaid)
+                .OrderBy(i => i.UnitPrice)
+                .ToList();
+
+            decimal remainingAmount = request.Amount;
+            int paidItemsCount = 0;
+
+            foreach (var item in unpaidItems)
+            {
+                decimal itemTotalPrice = item.UnitPrice * item.Quantity;
+
+                if (remainingAmount >= itemTotalPrice)
+                {
+                    item.IsPaid = true;
+                    remainingAmount -= itemTotalPrice;
+                    paidItemsCount++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (paidItemsCount == 0)
+                return BadRequest(new { message = "Girdiğiniz tutar masadaki en ucuz ürünü ödemeye bile yetmiyor." });
+
+            bool isAllPaid = activeOrder.OrderItems.All(i => i.IsPaid);
+            if (isAllPaid)
+            {
+                activeOrder.IsActive = false;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                Message = $"{paidItemsCount} adet ürünün ödemesi alındı.",
+                RemainingChange = remainingAmount, 
+                IsTableClosed = isAllPaid
+            });
+        } 
+
     }
 }

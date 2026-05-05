@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Noir.Application.DTOs
 {
-    class PayAmountRequest
+    public class PayAmountRequest
     {
+        public decimal Amount { get; set; }
     }
 }
