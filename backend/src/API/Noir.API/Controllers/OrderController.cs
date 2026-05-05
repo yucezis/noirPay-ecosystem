@@ -39,7 +39,9 @@ namespace Noir.API.Controllers
                 .Select(o => new
                 {
                     Id = o.Id,
-                    TableName = o.Table != null ? o.Table.Name : "Bilinmeyen Masa",
+                    TableName = o.Table != null
+                ? $"{o.Table.Name} / No: {o.Table.TableNo}"
+                : "Bilinmeyen Masa",
                     TableId = o.TableId,
                     TotalAmount = o.TotalAmount,
                     CreatedAt = o.CreatedAt,
@@ -55,22 +57,6 @@ namespace Noir.API.Controllers
             return Ok(activeOrders);
         }
 
-
-        [HttpPost("complete/{orderId}")]
-        public async Task<IActionResult> CompleteOrder(Guid orderId)
-        {
-            var order = await _context.Orders.FindAsync(orderId);
-
-            if (order == null)
-                return NotFound(new { Message = "Sipariş bulunamadı." });
-
-            order.IsActive = false;
-
-            await _context.SaveChangesAsync();
-            await _hubContext.Clients.Group(order.TableId.ToString()).SendAsync("StatusUpdated", "Siparişiniz Teslim Edildi");
-
-            return Ok(new { Message = "Sipariş başarıyla tamamlandı ve arşivlendi." });
-        }
 
         [HttpPost("split-equally/{tableId}")]
         public async Task<IActionResult> SplitBillEqually(Guid tableId, [FromBody] SplitEquallyRequest request)
