@@ -4,9 +4,11 @@ import { Receipt, Bell, CreditCard, ArrowLeft, History, X, Users, PieChart, Chec
 import axios from 'axios';
 
 interface OrderItem {
+  id: string;
   name: string;
   quantity: number;
   price: number;
+  isPaid: boolean;
 }
 
 export default function CustomerBillView() {
@@ -22,9 +24,10 @@ export default function CustomerBillView() {
   const [loading, setLoading] = useState(true);
   const [isRequested, setIsRequested] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); 
-  const [modalView, setModalView] = useState<'options' | 'splitEqually'>('options');
   const [numberOfPeople, setNumberOfPeople] = useState<number>(1); 
   const [splitShares, setSplitShares] = useState<number[]>([]);
+  const [modalView, setModalView] = useState<'options' | 'splitEqually' | 'payByItems'>('options'); 
+  const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
 
   useEffect(() => {
     if (modalView === 'splitEqually' && tableId) {
@@ -63,6 +66,20 @@ export default function CustomerBillView() {
 
     fetchBill();
   }, [tableId]);
+
+  // Ürün seçme/çıkarma fonksiyonu
+  const toggleItemSelection = (itemId: string) => {
+    setSelectedItemIds(prev => 
+      prev.includes(itemId) 
+        ? prev.filter(id => id !== itemId) 
+        : [...prev, itemId]
+    );
+  };
+
+  // Seçili ürünlerin toplam fiyatını hesaplama
+  const selectedItemsTotal = items
+    .filter(item => selectedItemIds.includes(item.id))
+    .reduce((sum, item) => sum + item.price, 0);
 
   const handleBringToTable = async () => {
     try {
@@ -162,7 +179,6 @@ export default function CustomerBillView() {
         </div>
       </main>
 
-      {/* ÖDEME SEÇENEKLERİ MODALI */}
       {/* 🌟 ÖDEME SEÇENEKLERİ MODALI 🌟 */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-4 sm:p-0 animate-in fade-in duration-200">
@@ -173,23 +189,34 @@ export default function CustomerBillView() {
               <div className="flex items-center gap-3">
                 {/* Alt Ekrana Geçtiysek Geri Butonu Çıksın */}
                 {modalView !== 'options' && (
-                  <button onClick={() => setModalView('options')} className="p-2 bg-zinc-900 rounded-full text-zinc-400 hover:text-white transition-colors">
+                  <button 
+                    onClick={() => {
+                      setModalView('options');
+                      setSelectedItemIds([]); // Geri dönünce seçimleri temizle
+                    }} 
+                    className="p-2 bg-zinc-900 rounded-full text-zinc-400 hover:text-white transition-colors"
+                  >
                     <ArrowLeft className="w-5 h-5" />
                   </button>
                 )}
                 <div>
                   <h3 className="text-xl font-black text-white">
-                    {modalView === 'options' ? 'Ödeme Yöntemi' : 'Bölerek Öde'}
+                    {modalView === 'options' ? 'Ödeme Yöntemi' : 
+                     modalView === 'splitEqually' ? 'Bölerek Öde' : 'Ürün Seç'}
                   </h3>
                   <p className="text-xs text-zinc-500 mt-1">
-                    {modalView === 'options' ? 'Lütfen ödeme şeklini seçin' : 'Hesap kaç kişiye bölünecek?'}
+                    {modalView === 'options' ? 'Lütfen ödeme şeklini seçin' : 
+                     modalView === 'splitEqually' ? 'Hesap kaç kişiye bölünecek?' : 'Sadece yediklerinizi seçin'}
                   </p>
                 </div>
               </div>
               <button 
                 onClick={() => {
                   setIsModalOpen(false);
-                  setTimeout(() => setModalView('options'), 300); // Kapandıktan sonra başa dön
+                  setTimeout(() => {
+                    setModalView('options');
+                    setSelectedItemIds([]);
+                  }, 300);
                 }} 
                 className="p-2 bg-zinc-900 rounded-full text-zinc-400 hover:text-white transition-colors"
               >
@@ -201,7 +228,6 @@ export default function CustomerBillView() {
             {modalView === 'options' && (
               <div className="space-y-3 animate-in slide-in-from-left-4 fade-in duration-300">
                 
-                {/* İŞTE SENİN BUTONUN - ARTIK TIKLANABİLİR! */}
                 <button 
                   onClick={() => setModalView('splitEqually')}
                   className="w-full flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-colors group"
@@ -215,7 +241,6 @@ export default function CustomerBillView() {
                   </div>
                 </button>
 
-                {/* Diğer butonlar (Kısmı Öde, Ürün Seç) aynı kalıyor... */}
                 <button className="w-full flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-colors group">
                   <div className="p-2 bg-zinc-800 rounded-xl group-hover:bg-zinc-700 transition-colors">
                     <PieChart className="w-5 h-5 text-orange-500" />
@@ -226,7 +251,11 @@ export default function CustomerBillView() {
                   </div>
                 </button>
 
-                <button className="w-full flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-colors group">
+                {/* 🌟 YENİ BAĞLANTI: ÜRÜN SEÇEREK ÖDE BUTONU TIKLANABİLİR YAPILDI */}
+                <button 
+                  onClick={() => setModalView('payByItems')}
+                  className="w-full flex items-center gap-4 p-4 bg-zinc-900/50 border border-zinc-800 rounded-2xl hover:bg-zinc-800 transition-colors group"
+                >
                   <div className="p-2 bg-zinc-800 rounded-xl group-hover:bg-zinc-700 transition-colors">
                     <CheckSquare className="w-5 h-5 text-orange-500" />
                   </div>
@@ -242,7 +271,6 @@ export default function CustomerBillView() {
             {modalView === 'splitEqually' && (
               <div className="space-y-6 animate-in slide-in-from-right-4 fade-in duration-300">
                 
-                {/* Kişi Sayısı Seçici */}
                 <div className="flex items-center justify-between p-4 bg-zinc-900 border border-zinc-800 rounded-2xl">
                   <span className="text-sm font-bold text-white">Kişi Sayısı</span>
                   <div className="flex items-center gap-5">
@@ -263,14 +291,12 @@ export default function CustomerBillView() {
                   </div>
                 </div>
 
-                {/* Tutar Göstergesi */}
                 <div className="text-center p-6 bg-zinc-900/50 border border-zinc-800/50 rounded-2xl">
                   <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold mb-2">Kişi Başı Tutar</p>
                   <p className="text-4xl font-black text-white italic">
                     {splitShares.length > 0 ? splitShares[0].toFixed(2) : '0.00'} <span className="text-xl text-zinc-500">TL</span>
                   </p>
                   
-                  {/* Algoritmamızın Kuruş Farkı Notu */}
                   {splitShares.length > 0 && splitShares[0] !== splitShares[splitShares.length - 1] && (
                     <p className="text-[10px] text-orange-500/80 mt-3 font-medium">
                       * Yuvarlama farkı ({(splitShares[splitShares.length - 1] - splitShares[0]).toFixed(2)} TL) son ödeyen kişiye yansıtılacaktır.
@@ -278,11 +304,71 @@ export default function CustomerBillView() {
                   )}
                 </div>
 
-                {/* Öde Butonu */}
                 <button className="w-full py-4 bg-white text-black font-black rounded-2xl hover:bg-zinc-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.1)] flex items-center justify-center gap-2">
                   <CreditCard className="w-5 h-5" />
                   ÖDEMEYE GEÇ
                 </button>
+              </div>
+            )}
+
+            {/* 🌟 GÖRÜNÜM 3: ÜRÜN SEÇEREK ÖDE EKRANI */}
+            {modalView === 'payByItems' && (
+              <div className="space-y-4 animate-in slide-in-from-right-4 fade-in duration-300">
+                
+                {/* Ürün Listesi */}
+                <div className="max-h-60 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
+                  {items.filter(item => !item.isPaid).length === 0 ? (
+                    <div className="text-center p-6 bg-zinc-900/50 rounded-2xl border border-dashed border-zinc-800">
+                      <p className="text-sm text-zinc-500">Ödenecek ürün kalmadı.</p>
+                    </div>
+                  ) : (
+                    items.filter(item => !item.isPaid).map((item, index) => (
+                      <div 
+                        key={item.id || index} 
+                        onClick={() => toggleItemSelection(item.id)}
+                        className={`flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all duration-200 ${
+                          selectedItemIds.includes(item.id) 
+                            ? 'bg-orange-500/10 border-orange-500' 
+                            : 'bg-zinc-900/50 border-zinc-800 hover:bg-zinc-800'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`w-5 h-5 rounded flex items-center justify-center border transition-colors ${
+                            selectedItemIds.includes(item.id) ? 'bg-orange-500 border-orange-500' : 'border-zinc-600'
+                          }`}>
+                            {selectedItemIds.includes(item.id) && <CheckSquare className="w-3 h-3 text-black" />}
+                          </div>
+                          <div>
+                            <p className="text-sm font-bold text-white">{item.name}</p>
+                            <p className="text-[10px] text-zinc-500">{item.quantity} Adet</p>
+                          </div>
+                        </div>
+                        <span className="font-mono text-sm text-white">{(item.price * item.quantity).toFixed(2)} TL</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                {/* Toplam Tutar ve Buton */}
+                <div className="pt-4 border-t border-zinc-800 space-y-4">
+                  <div className="flex items-center justify-between px-2">
+                    <span className="text-sm font-bold text-zinc-400">Seçilen Tutar</span>
+                    <span className="text-2xl font-black text-white italic">{selectedItemsTotal.toFixed(2)} TL</span>
+                  </div>
+                  
+                  <button 
+                    disabled={selectedItemIds.length === 0}
+                    className={`w-full py-4 font-black rounded-2xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] flex items-center justify-center gap-2 ${
+                      selectedItemIds.length > 0 
+                        ? 'bg-white text-black hover:bg-zinc-200' 
+                        : 'bg-zinc-900 text-zinc-600 cursor-not-allowed border border-zinc-800'
+                    }`}
+                  >
+                    <CreditCard className="w-5 h-5" />
+                    SEÇİLENLERİ ÖDE
+                  </button>
+                </div>
+
               </div>
             )}
 
