@@ -306,8 +306,109 @@ export default function CustomerBillView() {
           </button>
         </div>
       )}
+{/* 🌟 GÖRÜNÜM 2: EŞİT BÖLEREK ÖDE EKRANI */}
+{modalView === 'splitEqually' && (
+  <div className="space-y-6 animate-in slide-in-from-right-4 fade-in duration-300">
+    
+    {/* Kişi Sayısı Seçici */}
+    <div className="flex items-center justify-between p-4 bg-zinc-900 border border-zinc-800 rounded-2xl">
+      <span className="text-sm font-bold text-white">Kişi Sayısı</span>
+      <div className="flex items-center gap-5">
+        <button 
+          onClick={() => setNumberOfPeople(Math.max(2, numberOfPeople - 1))}
+          className="w-10 h-10 flex items-center justify-center bg-zinc-800 rounded-full text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors disabled:opacity-50"
+          disabled={numberOfPeople <= 2}
+        >
+          <Minus className="w-5 h-5" />
+        </button>
+        <span className="font-black text-2xl text-white w-4 text-center">{numberOfPeople}</span>
+        <button 
+          onClick={() => setNumberOfPeople(numberOfPeople + 1)}
+          className="w-10 h-10 flex items-center justify-center bg-zinc-800 rounded-full text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors"
+        >
+          <Plus className="w-5 h-5" />
+        </button>
+      </div>
+    </div>
 
-      {/* ... Diğer görünümler (splitEqually ve payByItems) aynı kalıyor ... */}
+    {/* Tutar Göstergesi */}
+    <div className="text-center p-6 bg-zinc-900/50 border border-zinc-800/50 rounded-2xl">
+      <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold mb-2">Kişi Başı Tutar</p>
+      <p className="text-4xl font-black text-white italic">
+        {(totalPrice / numberOfPeople).toFixed(2)} <span className="text-xl text-zinc-500">TL</span>
+      </p>
+      
+      <p className="text-[10px] text-zinc-500 mt-3 font-medium">
+        * Toplam {totalPrice.toFixed(2)} TL üzerinden hesaplanmıştır.
+      </p>
+    </div>
+
+    <button className="w-full py-4 bg-white text-black font-black rounded-2xl hover:bg-zinc-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.1)] flex items-center justify-center gap-2">
+      <CreditCard className="w-5 h-5" />
+      ÖDEMEYE GEÇ
+    </button>
+  </div>
+)}
+
+{/* 🌟 GÖRÜNÜM 3: ÜRÜN SEÇEREK ÖDE EKRANI */}
+{modalView === 'payByItems' && (
+  <div className="space-y-4 animate-in slide-in-from-right-4 fade-in duration-300">
+    
+    {/* Ürün Listesi */}
+    <div className="max-h-60 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
+      {items.filter(item => !item.isPaid).length === 0 ? (
+        <div className="text-center p-6 bg-zinc-900/50 rounded-2xl border border-dashed border-zinc-800">
+          <p className="text-sm text-zinc-500">Ödenecek ürün kalmadı.</p>
+        </div>
+      ) : (
+        items.filter(item => !item.isPaid).map((item) => (
+          <div 
+            key={item.id} 
+            onClick={() => toggleItemSelection(item.id)}
+            className={`flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all duration-200 ${
+              selectedItemIds.includes(item.id) 
+                ? 'bg-orange-500/10 border-orange-500' 
+                : 'bg-zinc-900/50 border-zinc-800 hover:bg-zinc-800'
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <div className={`w-5 h-5 rounded flex items-center justify-center border transition-colors ${
+                selectedItemIds.includes(item.id) ? 'bg-orange-500 border-orange-500' : 'border-zinc-600'
+              }`}>
+                {selectedItemIds.includes(item.id) && <CheckSquare className="w-3 h-3 text-black" />}
+              </div>
+              <div>
+                <p className="text-sm font-bold text-white">{item.name}</p>
+                <p className="text-[10px] text-zinc-500">{item.quantity} Adet</p>
+              </div>
+            </div>
+            <span className="font-mono text-sm text-white">{(item.price * item.quantity).toFixed(2)} TL</span>
+          </div>
+        ))
+      )}
+    </div>
+
+    {/* Alt Toplam ve Buton */}
+    <div className="pt-4 border-t border-zinc-800 space-y-4">
+      <div className="flex items-center justify-between px-2">
+        <span className="text-sm font-bold text-zinc-400">Seçilen Toplam</span>
+        <span className="text-2xl font-black text-white italic">{selectedItemsTotal.toFixed(2)} TL</span>
+      </div>
+      
+      <button 
+        disabled={selectedItemIds.length === 0}
+        className={`w-full py-4 font-black rounded-2xl transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] flex items-center justify-center gap-2 ${
+          selectedItemIds.length > 0 
+            ? 'bg-white text-black hover:bg-zinc-200' 
+            : 'bg-zinc-900 text-zinc-600 cursor-not-allowed border border-zinc-800'
+        }`}
+      >
+        <CreditCard className="w-5 h-5" />
+        {selectedItemIds.length > 0 ? 'SEÇİLENLERİ ÖDE' : 'ÜRÜN SEÇİN'}
+      </button>
+    </div>
+  </div>
+)}
     </div>
   </div>
 )}
