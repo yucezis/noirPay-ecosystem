@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Noir.Application.DTOs
 {
-    public class SplitEquallyRequest
+    public class PayItemsRequest
     {
-        public int NumberOfPeople { get; set; }
+        public List<Guid> ItemIds { get; set; } = new List<Guid>();
     }
 }
