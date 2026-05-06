@@ -7,6 +7,9 @@ using Noir.Application.Abstractions;
 using Noir.Infrastructure.Authentication;
 using Noir.API.Hubs;
 using Noir.Infrastructure.Contexts;
+using Noir.Application.Interfaces;
+using Noir.Application.Interfaces;
+using Noir.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +55,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddScoped<IPaymentService, MockPaymentService>();
 
 // Swagger Ayarlarý
 builder.Services.AddEndpointsApiExplorer();

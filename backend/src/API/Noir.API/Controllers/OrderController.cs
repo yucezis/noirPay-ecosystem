@@ -8,6 +8,7 @@ using Noir.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.SignalR;
 using Noir.API.Hubs;
+using Noir.Application.Interfaces;
 
 
 
@@ -20,11 +21,13 @@ namespace Noir.API.Controllers
     {
         private readonly NoirDbContext _context;
         private readonly IHubContext<OrderHub> _hubContext;
+        private readonly IPaymentService _paymentService;
 
-        public OrderController(NoirDbContext context, IHubContext<OrderHub> hubContext)
+        public OrderController(NoirDbContext context, IHubContext<OrderHub> hubContext, IPaymentService paymentService)
         {
             _context = context;
             _hubContext = hubContext;
+            _paymentService = paymentService;
         }
 
         [HttpGet("active-table/{tableId}")]
@@ -52,10 +55,8 @@ namespace Noir.API.Controllers
                 })
                 .FirstOrDefaultAsync();
 
-            if (activeOrder == null)
-            {
-                return NotFound(new { message = "Bu masada aktif bir hesap bulunamadı." });
-            }
+            if (activeOrder == null) return NotFound(new { message = "Bu masada aktif bir hesap bulunamadı." });
+            
 
             return Ok(activeOrder);
         }
@@ -64,7 +65,9 @@ namespace Noir.API.Controllers
         [HttpPost("split-equally/{tableId}")]
         public async Task<IActionResult> SplitBillEqually(Guid tableId, [FromBody] SplitEquallyRequest request)
         {
-            var activeOrder = await _context.Orders.FirstOrDefaultAsync(o => o.TableId == tableId && o.IsActive);
+            var activeOrder = await _context.Orders
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.TableId == tableId && o.IsActive);
 
             if (activeOrder == null)
                 return NotFound(new { message = "Bu masada aktif bir hesap bulunamadı" });
@@ -75,20 +78,56 @@ namespace Noir.API.Controllers
             decimal baseShare = Math.Round(totalAmount / peopleCount, 2, MidpointRounding.ToZero);
             decimal kalan = totalAmount - (baseShare * peopleCount);
 
-            var splitResult = new List<Decimal>();
+            var unpaidItems = activeOrder.OrderItems.Where(i => !i.IsPaid).OrderBy(i => i.UnitPrice).ToList();
+            decimal remainingTotal = unpaidItems.Sum(i => i.UnitPrice * i.Quantity);
 
-            for (int i = 0; i < peopleCount; i++)
+            decimal amountToPay = (remainingTotal <= baseShare + kalan) ? remainingTotal : baseShare;
+
+            var paymentResult = await _paymentService.ProcessPaymentAsync(
+                amountToPay,
+                request.CardNumber,
+                request.ExpireMonth,
+                request.ExpireYear,
+                request.Cvc
+            );
+
+            if (!paymentResult.IsSuccess)
             {
-                if(i == peopleCount - 1) splitResult.Add(baseShare+kalan);
-                else splitResult.Add(baseShare);
+                return BadRequest(new { message = paymentResult.Message });
             }
+
+            decimal currentPaymentPool = amountToPay;
+            int paidItemsCount = 0;
+
+            foreach (var item in unpaidItems)
+            {
+                decimal itemTotalPrice = item.UnitPrice * item.Quantity;
+
+                if (currentPaymentPool >= itemTotalPrice)
+                {
+                    item.IsPaid = true;
+                    currentPaymentPool -= itemTotalPrice;
+                    paidItemsCount++;
+                }
+                else
+                {
+                    break; 
+                }
+            }
+
+            bool isAllPaid = activeOrder.OrderItems.All(i => i.IsPaid);
+            if (isAllPaid)
+            {
+                activeOrder.IsActive = false;
+            }
+
+            await _context.SaveChangesAsync();
 
             return Ok(new
             {
-                TableId = tableId,
-                TotalAmount = totalAmount,
-                NumberOfPeople = peopleCount,
-                Shares = splitResult
+                Message = $"{amountToPay} TL tutarındaki eşit pay başarıyla çekildi.",
+                TransactionId = paymentResult.TransactionId,
+                IsTableClosed = isAllPaid
             });
         }
 
@@ -110,20 +149,34 @@ namespace Noir.API.Controllers
             if (!itemsToPay.Any())
                 return BadRequest(new { message = "Seçilen ürünler bulunamadı veya zaten ödenmiş." });
 
+            decimal totalAmount = itemsToPay.Sum(i => i.UnitPrice * i.Quantity);
+
+            var paymentResult = await _paymentService.ProcessPaymentAsync(
+                totalAmount,
+                request.CardNumber,
+                request.ExpireMonth,
+                request.ExpireYear,
+                request.Cvc);
+
+            if (!paymentResult.IsSuccess)
+            {
+                return BadRequest(new { message = paymentResult.Message });
+            }
+
             foreach (var item in itemsToPay)
             {
                 item.IsPaid = true;
             }
 
-            bool AllItemsPaid = activeOrder.OrderItems.All(i=>i.IsPaid);
-
-            if(AllItemsPaid) activeOrder.IsActive = false;
+            bool AllItemsPaid = activeOrder.OrderItems.All(i => i.IsPaid);
+            if (AllItemsPaid) activeOrder.IsActive = false;
 
             await _context.SaveChangesAsync();
 
             return Ok(new
             {
                 Message = "Seçilen ürünlerin ödemesi başarıyla alındı.",
+                TransactionId = paymentResult.TransactionId, 
                 PaidItemsCount = itemsToPay.Count,
                 IsTableClosed = AllItemsPaid
             });
@@ -147,7 +200,8 @@ namespace Noir.API.Controllers
                 .ToList();
 
             decimal remainingAmount = request.Amount;
-            int paidItemsCount = 0;
+            decimal totalAmountToCharge = 0; 
+            var itemsToMarkPaid = new List<OrderItem>();
 
             foreach (var item in unpaidItems)
             {
@@ -155,9 +209,9 @@ namespace Noir.API.Controllers
 
                 if (remainingAmount >= itemTotalPrice)
                 {
-                    item.IsPaid = true;
+                    itemsToMarkPaid.Add(item);
                     remainingAmount -= itemTotalPrice;
-                    paidItemsCount++;
+                    totalAmountToCharge += itemTotalPrice;
                 }
                 else
                 {
@@ -165,8 +219,26 @@ namespace Noir.API.Controllers
                 }
             }
 
-            if (paidItemsCount == 0)
-                return BadRequest(new { message = "Girdiğiniz tutar masadaki en ucuz ürünü ödemeye bile yetmiyor." });
+            if (!itemsToMarkPaid.Any())
+                return BadRequest(new { message = "Girdiğiniz tutar masadaki en ucuz ürünü tam olarak ödemeye yetmiyor." });
+
+            var paymentResult = await _paymentService.ProcessPaymentAsync(
+                totalAmountToCharge,
+                request.CardNumber,
+                request.ExpireMonth,
+                request.ExpireYear,
+                request.Cvc
+            );
+
+            if (!paymentResult.IsSuccess)
+            {
+                return BadRequest(new { message = paymentResult.Message });
+            }
+
+            foreach (var item in itemsToMarkPaid)
+            {
+                item.IsPaid = true;
+            }
 
             bool isAllPaid = activeOrder.OrderItems.All(i => i.IsPaid);
             if (isAllPaid)
@@ -178,11 +250,11 @@ namespace Noir.API.Controllers
 
             return Ok(new
             {
-                Message = $"{paidItemsCount} adet ürünün ödemesi alındı.",
+                Message = $"{itemsToMarkPaid.Count} adet ürün için toplam {totalAmountToCharge} TL başarıyla çekildi.",
+                TransactionId = paymentResult.TransactionId,
                 RemainingChange = remainingAmount, 
                 IsTableClosed = isAllPaid
             });
-        } 
-
-    }
+        }
+    } 
 }
