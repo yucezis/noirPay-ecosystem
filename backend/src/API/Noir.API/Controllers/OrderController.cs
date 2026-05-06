@@ -27,34 +27,37 @@ namespace Noir.API.Controllers
             _hubContext = hubContext;
         }
 
-        [HttpGet("active/{restaurantId}")]
-        public async Task<IActionResult> GetActiveOrders(Guid restaurantId)
+        [HttpGet("active-table/{tableId}")]
+        public async Task<IActionResult> GetActiveOrderForTable(Guid tableId)
         {
-            var activeOrders = await _context.Orders
+            var activeOrder = await _context.Orders
                 .Include(o => o.Table)
                 .Include(o => o.OrderItems)
                     .ThenInclude(oi => oi.Product)
-                .Where(o => o.IsActive && o.RestaurantId == restaurantId)
-                .OrderByDescending(o => o.CreatedAt)
+                .Where(o => o.IsActive && o.TableId == tableId)
                 .Select(o => new
                 {
                     Id = o.Id,
-                    TableName = o.Table != null
-                ? $"{o.Table.Name} / No: {o.Table.TableNo}"
-                : "Bilinmeyen Masa",
                     TableId = o.TableId,
+                    TableName = o.Table != null ? $"{o.Table.Name} {o.Table.TableNo}" : "Bilinmeyen Masa",
                     TotalAmount = o.TotalAmount,
-                    CreatedAt = o.CreatedAt,
                     Items = o.OrderItems.Select(oi => new
                     {
-                        Name = oi.Product != null ? oi.Product.Name : "Silinmiş Ürün",
+                        Id = oi.Id, 
+                        Name = oi.Product != null ? oi.Product.Name : "İsimsiz Ürün",
                         Quantity = oi.Quantity,
-                        Price = oi.UnitPrice
-                    })
+                        Price = oi.UnitPrice,
+                        IsPaid = oi.IsPaid 
+                    }).ToList()
                 })
-                .ToListAsync();
+                .FirstOrDefaultAsync();
 
-            return Ok(activeOrders);
+            if (activeOrder == null)
+            {
+                return NotFound(new { message = "Bu masada aktif bir hesap bulunamadı." });
+            }
+
+            return Ok(activeOrder);
         }
 
 
