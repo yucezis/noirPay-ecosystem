@@ -17,6 +17,8 @@ namespace Noir.Domain.Entities
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public Guid RestaurantId { get; set; }
 
+        public decimal PaidAmount { get; set; } = 0;
+
         // İlişki: Bu adisyonun içinde hangi kalemler var?
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
