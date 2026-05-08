@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Noir.Domain.Entities
-{public class Table : BaseEntity
+{
+    public class Table : BaseEntity
     {
         public string Name { get; set; } = string.Empty;
         public bool IsActive { get; set; } = true;

@@ -91,11 +91,12 @@ namespace Noir.API.Controllers
                 foreach (var item in activeOrder.OrderItems) item.IsPaid = true;
             }
 
+            await CheckAndCloseOrderAsync(activeOrder);
             await _context.SaveChangesAsync();
 
             return Ok(new
             {
-                Message = $"{amountToPay} TL tutarındaki eşit pay başarıyla çekildi.",
+                Message = $"{amountToPay} TL tutarındaki pay başarıyla çekildi.",
                 TransactionId = paymentResult.TransactionId,
                 IsTableClosed = isAllPaid
             });
@@ -157,6 +158,7 @@ namespace Noir.API.Controllers
                 activeOrder.PaidAmount = activeOrder.TotalAmount;
             }
 
+            await CheckAndCloseOrderAsync(activeOrder);
             await _context.SaveChangesAsync();
 
             return Ok(new
@@ -191,6 +193,7 @@ namespace Noir.API.Controllers
                 foreach (var item in activeOrder.OrderItems) item.IsPaid = true;
             }
 
+            await CheckAndCloseOrderAsync(activeOrder);
             await _context.SaveChangesAsync();
 
             return Ok(new
@@ -200,6 +203,17 @@ namespace Noir.API.Controllers
                 RemainingChange = request.Amount > remainingOrderAmount ? request.Amount - remainingOrderAmount : 0,
                 IsTableClosed = isAllPaid
             });
+        }
+
+        private async Task CheckAndCloseOrderAsync(Order order)
+        {
+            if (order.PaidAmount >= order.TotalAmount)
+            {
+                order.IsActive = false;
+                order.PaidAmount = order.TotalAmount; 
+
+                await _hubContext.Clients.All.SendAsync("TableStatusChanged", order.TableId, "Empty");
+            }
         }
     } 
 }
