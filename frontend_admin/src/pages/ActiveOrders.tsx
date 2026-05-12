@@ -31,7 +31,6 @@ const ActiveOrders: React.FC = () => {
       return; 
     }
 
-    // 1. MEVCUT AKTİF SİPARİŞLERİ GETİR
     const fetchExistingOrders = async () => {
       try {
         const response = await axios.get(`https://localhost:7057/api/Order/active/${restaurantId}`, {
@@ -52,7 +51,6 @@ const ActiveOrders: React.FC = () => {
       }
     };
 
-    // 2. SIGNALR CANLI BAĞLANTI
     const newConnection = new signalR.HubConnectionBuilder()
       .withUrl(HUB_URL)
       .withAutomaticReconnect()
@@ -86,17 +84,14 @@ const ActiveOrders: React.FC = () => {
     };
   }, []);
 
-  // 3. TESLİM ET FONKSİYONU
   const markAsDelivered = async (orderId: string) => {
     const token = localStorage.getItem("token");
 
     try {
-      // Backend'deki yeni 'deliver' endpoint'ine istek atıyoruz
       await axios.post(`https://localhost:7057/api/Order/deliver/${orderId}`, {}, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
-      // Mutfak ekranından (local state) kaldırıyoruz
       setOrders(prev => prev.filter(o => o.orderId !== orderId));
       console.log(`✅ Sipariş ${orderId} teslim edildi.`);
     } catch (err) {
@@ -106,52 +101,56 @@ const ActiveOrders: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-zinc-100 p-8 font-sans">
+    // 🌟 ANA ARKA PLAN VE YAZI RENGİ DEĞİŞTİ 🌟
+    <div className="min-h-screen bg-gray-50 text-gray-900 p-8 font-sans">
       
       {/* HEADER */}
-      <header className="flex items-center justify-between mb-10 pb-6 border-b border-zinc-800/50">
+      <header className="flex items-center justify-between mb-10 pb-6 border-b border-gray-200">
         <div>
-          <h1 className="text-3xl font-black tracking-tight text-white flex items-center gap-3">
+          <h1 className="text-3xl font-black tracking-tight text-gray-900 flex items-center gap-3">
             <ChefHat className="w-8 h-8 text-orange-500" />
             Mutfak Paneli
           </h1>
-          <p className="text-sm text-zinc-500 mt-2 font-medium tracking-wide uppercase">
+          <p className="text-sm text-gray-500 mt-2 font-medium tracking-wide uppercase">
             Hazırlanan ve Bekleyen Siparişler
           </p>
         </div>
-        <div className="flex items-center gap-3 bg-zinc-900/80 px-4 py-2 rounded-full border border-zinc-800">
-          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.6)]"></div>
-          <span className="text-sm font-bold text-zinc-300">Canlı Bağlantı Aktif</span>
+        {/* Canlı Bağlantı Rozeti Açık Temaya Uyarlandı */}
+        <div className="flex items-center gap-3 bg-green-50 px-4 py-2 rounded-full border border-green-200 shadow-sm">
+          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+          <span className="text-sm font-bold text-green-700">Canlı Bağlantı Aktif</span>
         </div>
       </header>
 
       {/* SİPARİŞ LİSTESİ */}
       <main>
         {orders.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-32 opacity-50">
-            <UtensilsCrossed className="w-20 h-20 text-zinc-700 mb-6" />
-            <p className="text-xl font-bold text-zinc-500">Mutfak şu an sakin...</p>
+          <div className="flex flex-col items-center justify-center py-32 opacity-70">
+            <UtensilsCrossed className="w-20 h-20 text-gray-300 mb-6" />
+            <p className="text-xl font-bold text-gray-400">Mutfak şu an sakin...</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {orders.map((order) => (
               <div 
                 key={order.orderId} 
-                className="bg-zinc-900/40 border border-zinc-800 rounded-3xl p-6 relative overflow-hidden group hover:border-zinc-700 transition-all duration-300"
+                // Kartların arka planı beyaz, hafif gri çerçeve ve gölgeli
+                className="bg-white border border-gray-200 rounded-3xl p-6 relative overflow-hidden group hover:border-gray-300 hover:shadow-md transition-all duration-300"
               >
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-600 to-yellow-500"></div>
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-yellow-400"></div>
 
-                <div className="flex justify-between items-start mb-6">
+                <div className="flex justify-between items-start mb-6 mt-2">
                   <div>
-                    <h2 className="text-2xl font-black text-white leading-tight">
+                    <h2 className="text-2xl font-black text-gray-900 leading-tight">
                                 {order.tableName}
                     </h2>
-                    <div className="flex items-center gap-1.5 text-xs text-orange-400 mt-1 font-bold">
+                    <div className="flex items-center gap-1.5 text-xs text-orange-600 mt-1 font-bold">
                       <Clock className="w-3.5 h-3.5" />
                           {order.orderTime.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
                     </div>
                   </div>
-                  <span className="px-3 py-1 bg-orange-500/10 text-orange-400 text-[10px] font-black uppercase tracking-wider rounded-lg border border-orange-500/20">
+                  {/* Bekliyor Etiketi */}
+                  <span className="px-3 py-1 bg-orange-50 text-orange-600 text-[10px] font-black uppercase tracking-wider rounded-lg border border-orange-200">
                     Bekliyor
                   </span>
                 </div>
@@ -160,10 +159,11 @@ const ActiveOrders: React.FC = () => {
                   {order.details.map((item, index) => (
                     <div key={index} className="flex justify-between items-center">
                       <div className="flex items-center gap-3">
-                        <span className="w-6 h-6 flex items-center justify-center bg-zinc-800 text-white font-bold rounded-md text-xs">
+                        {/* Ürün Adedi Kutucuğu */}
+                        <span className="w-7 h-7 flex items-center justify-center bg-gray-100 border border-gray-200 text-gray-700 font-bold rounded-lg text-xs">
                           {item.quantity}x
                         </span>
-                        <span className="font-semibold text-zinc-300">{item.name}</span>
+                        <span className="font-semibold text-gray-700">{item.name}</span>
                       </div>
                     </div>
                   ))}
@@ -171,7 +171,7 @@ const ActiveOrders: React.FC = () => {
 
                 <button 
                   onClick={() => markAsDelivered(order.orderId)}
-                  className="w-full py-4 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95"
+                  className="w-full py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95"
                 >
                   <CheckCircle className="w-5 h-5" />
                   TESLİM ET

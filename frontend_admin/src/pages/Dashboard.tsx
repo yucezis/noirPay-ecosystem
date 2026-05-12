@@ -24,9 +24,16 @@ export default function Dashboard() {
 
   const fetchData = async () => {
     try {
+      const token = localStorage.getItem('token');
+      
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      };
       const [tablesRes, summaryRes] = await Promise.all([
-        axios.get('https://localhost:7057/api/Table'),
-        axios.get('https://localhost:7057/api/Dashboard/summary')
+        axios.get('https://localhost:7057/api/Table', config),
+        axios.get('https://localhost:7057/api/Dashboard/summary', config)
       ]);
 
       setTables(tablesRes.data);

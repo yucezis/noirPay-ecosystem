@@ -36,6 +36,9 @@ export default function LoginPage() {
 
             console.log("✅ Giriş başarılı, veriler kasaya kilitlendi.");
             
+            localStorage.setItem('firstName', response.data.firstName || 'Admin');
+            localStorage.setItem('lastName', response.data.lastName || 'Kullanıcısı')
+
             navigate('/'); 
         } else {
             console.error("❌ Sunucu başarılı döndü ama beklenen veriler pakette yok!");

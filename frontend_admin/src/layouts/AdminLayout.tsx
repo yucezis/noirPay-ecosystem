@@ -5,46 +5,44 @@ import {
   LayoutDashboard, 
   Coffee, 
   QrCode, 
-  ClipboardList, 
   Settings, 
   LogOut,
   Bell,
   Store,
-  Table,
-  CheckCircle2
+  Table
 } from 'lucide-react';
 
 const AdminLayout: React.FC = () => {
   const location = useLocation();
-
   const navigate = useNavigate();
 
+  const firstName = localStorage.getItem('firstName') || 'Admin';
+  const lastName = localStorage.getItem('lastName') || 'Kullanıcısı';
+  const fullName = `${firstName} ${lastName}`;
+  const initials = `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+
   const handleLogout = () => {
-    // 1. LocalStorage'daki bilgileri temizle
     localStorage.removeItem('token');
     localStorage.removeItem('restaurantId'); 
+    localStorage.removeItem('firstName'); 
+    localStorage.removeItem('lastName'); 
     
     window.location.href = '/login'; 
   };
 
-  // BİLDİRİM STATE'LERİ
   const [toast, setToast] = useState<{table: string, time: string} | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  // SİGNALR GLOBAL DİNLEYİCİ
   useEffect(() => {
-    // 1. Bağlantıyı kur 
     const connection = new signalR.HubConnectionBuilder()
       .withUrl("https://localhost:7057/orderHub") 
       .withAutomaticReconnect()
       .build();
 
-    // 2. Bağlantıyı başlat
     connection.start()
       .then(() => console.log("Global Bildirim Servisi (Admin) Bağlandı!"))
       .catch(err => console.error("Bağlantı hatası: ", err));
 
-    // 3. React bileşeni ekrandan kaldırırken bağlantıyı temizle
     return () => {
       if (connection) {
         connection.stop();
@@ -52,7 +50,6 @@ const AdminLayout: React.FC = () => {
     };
   }, []); 
   
-  // Menü elemanlarımızı tanımlıyoruz
   const menuItems = [
     { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
     { path: '/orders', icon: Table, label: 'Aktif Siparişler' },
@@ -66,9 +63,7 @@ const AdminLayout: React.FC = () => {
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
       
-      {/* SOL MENÜ (SIDEBAR) */}
       <aside className="w-64 bg-white border-r border-gray-100 flex flex-col shadow-sm z-10">
-        {/* Logo Alanı */}
         <div className="h-16 flex items-center px-6 border-b border-gray-50">
           <div className="flex items-center gap-2 text-xl font-black tracking-tighter text-gray-900">
             <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
@@ -78,7 +73,6 @@ const AdminLayout: React.FC = () => {
           </div>
         </div>
 
-        {/* Navigasyon Linkleri */}
         <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-1">
           <p className="px-3 text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Ana Menü</p>
           
@@ -103,7 +97,6 @@ const AdminLayout: React.FC = () => {
           })}
         </nav>
 
-        {/* Alt Kısım - Çıkış Yap */}
         <div className="p-4 border-t border-gray-100">
           <button 
             onClick={handleLogout} 
@@ -115,16 +108,14 @@ const AdminLayout: React.FC = () => {
         </div>
       </aside>
 
-      {/* SAĞ TARAF (HEADER + İÇERİK ALANI) */}
       <div className="flex-1 flex flex-col relative">
-        {/* YENİ SİPARİŞ POP-UP BİLDİRİMİ */}
         {toast && (
           <div className="absolute top-20 right-8 bg-white border border-gray-100 p-4 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.1)] z-50 animate-in slide-in-from-right-8 fade-in duration-300 flex items-center gap-4 min-w-[300px]">
             <div className="w-12 h-12 bg-orange-50 rounded-full flex items-center justify-center">
               <Bell className="w-6 h-6 text-orange-500 animate-bounce" />
             </div>
             <div className="flex-1">
-              <p className="font-black text-gray-900 text-sm">Yeni Sipnpariş Geldi!</p>
+              <p className="font-black text-gray-900 text-sm">Yeni Sipariş Geldi!</p>
               <p className="text-xs text-gray-500 font-medium mt-0.5">
                 Masa: <span className="text-orange-500 font-bold text-sm">{toast.table}</span> • {toast.time}
               </p>
@@ -135,16 +126,14 @@ const AdminLayout: React.FC = () => {
           </div>
         )}
         
-        {/* ÜST BAR (HEADER) */}
         <header className="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-8 shadow-sm z-10">
           <div className="text-sm text-gray-500 font-medium">
             Tarih: {new Date().toLocaleDateString('tr-TR')}
           </div>
           
           <div className="flex items-center gap-4">
-            {/* Çan İkonu */}
             <button 
-              onClick={() => setUnreadCount(0)} // Tıklayınca sayacı sıfırla
+              onClick={() => setUnreadCount(0)} 
               className="relative p-2 text-gray-400 hover:bg-gray-50 rounded-full transition-colors"
             >
               <Bell className="w-5 h-5" />
@@ -155,21 +144,21 @@ const AdminLayout: React.FC = () => {
               )}
             </button>
             <div className="h-8 w-px bg-gray-200"></div>
+            
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-sm">
-                AD
+                {initials}
               </div>
               <div className="hidden md:block">
-                <p className="text-sm font-bold text-gray-700 leading-tight">Admin Kullanıcısı</p>
+                <p className="text-sm font-bold text-gray-700 leading-tight">{fullName}</p>
                 <p className="text-xs text-gray-500 font-medium">Yönetici</p>
               </div>
             </div>
+            
           </div>
         </header>
 
-        {/* ANA İÇERİK (SAYFALARIN RENDER EDİLECEĞİ YER) */}
         <main className="flex-1 overflow-y-auto bg-gray-50/50">
-          {/* Outlet: Hangi URL'deysek o sayfanın içeriği buraya gelir */}
           <Outlet /> 
         </main>
         

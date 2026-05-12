@@ -51,7 +51,9 @@ namespace Noir.API.Controllers
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
-                RestaurantId = restaurant?.Id 
+                RestaurantId = restaurant?.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName
             });
         }
 
