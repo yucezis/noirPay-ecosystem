@@ -64,7 +64,8 @@ namespace Noir.API.Controllers
                      t.Name,
                      t.TableNo,
                      t.QrCodeId,
-                     t.IsActive
+                     t.IsActive,
+                     Status = t.Orders.Any(o => o.IsActive) ? "Occupied" : "Empty"
                  })
                  .ToListAsync();
 

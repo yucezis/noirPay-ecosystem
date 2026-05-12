@@ -21,26 +21,21 @@ namespace Noir.API.Controllers
         [HttpGet("summary")]
         public async Task<IActionResult> GetDashboardSummary()
         {
-            // 🌟 ÇÖZÜM: PostgreSQL'in hata vermemesi için tarihlerin UTC olduğunu açıkça belirtiyoruz.
             var now = DateTime.UtcNow;
             var today = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0, DateTimeKind.Utc);
             var startOfMonth = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
 
-            // Günlük Ciro
             decimal dailyRevenue = await _context.Orders
                 .Where(o => o.CreatedAt >= today)
                 .SumAsync(o => (decimal?)o.PaidAmount) ?? 0;
 
-            // Aylık Ciro
             decimal monthlyRevenue = await _context.Orders
                 .Where(o => o.CreatedAt >= startOfMonth)
                 .SumAsync(o => (decimal?)o.PaidAmount) ?? 0;
 
-            // Bugünkü Adisyon
             int totalOrdersToday = await _context.Orders
                 .CountAsync(o => o.CreatedAt >= today);
 
-            // Dolu Masalar
             int activeTablesCount = await _context.Tables
                 .CountAsync(t => t.Orders.Any(o => o.IsActive));
 
