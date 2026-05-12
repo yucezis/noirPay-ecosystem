@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, CreditCard, Utensils, ShoppingBag, TrendingUp } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
 export default function LoginPage() { 
@@ -15,8 +15,6 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 🛡️ 1. ÇİFT TIKLAMA KONTROLÜ
-    // Eğer halihazırda bir istek varsa, ikinciyi başlatma
     if (isLoading) return;
 
     setIsLoading(true);
@@ -27,22 +25,17 @@ export default function LoginPage() {
             password 
         });
         
-        // 🕵️‍♂️ 2. VERİ DOĞRULAMA (HAYATİ ÖNEMDE!)
-        // Sadece ve sadece veri gelmişse kasaya dokunuyoruz
         if (response.data && response.data.accessToken && response.data.restaurantId) {
             const token = response.data.accessToken;
             const restId = response.data.restaurantId;
 
-            // Önce nükleer temizlik
             localStorage.clear();
 
-            // Sonra sağlam veriyi yaz
             localStorage.setItem("token", token);
             localStorage.setItem("restaurantId", restId);
 
             console.log("✅ Giriş başarılı, veriler kasaya kilitlendi.");
             
-            // Reload yapmadan yumuşak geçiş
             navigate('/'); 
         } else {
             console.error("❌ Sunucu başarılı döndü ama beklenen veriler pakette yok!");
@@ -52,18 +45,16 @@ export default function LoginPage() {
         console.error("❌ Giriş işlemi başarısız:", err);
         alert("Giriş yapılamadı, lütfen bilgilerinizi kontrol edin.");
     } finally {
-        // İstek bittiğinde kilidi kaldır
         setIsLoading(false);
     }
 };
 
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-slate-100 to-slate-200">
-      {/* LEFT: FORM SECTION */}
+      
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
         <div className="w-full max-w-lg bg-white/80 backdrop-blur-xl shadow-2xl rounded-3xl p-12 border border-white/20">
           
-          {/* Brand Logo */}
           <div className="flex items-center gap-4 mb-10">
             <div className="bg-gradient-to-br from-slate-900 to-slate-700 p-4 rounded-2xl shadow-lg">
               <CreditCard className="w-7 h-7 text-white" />
@@ -140,12 +131,11 @@ export default function LoginPage() {
           </div>
 
           <p className="text-center text-base text-slate-500">
-            Hesabın yok mu? <button type="button" className="text-slate-900 font-medium hover:underline">Kaydol</button>
+            Hesabın yok mu? <Link to="/register" className="text-slate-900 font-bold hover:underline transition-colors">Kaydol</Link>
           </p>
         </div>
       </div>
 
-      {/* RIGHT: INFO SECTION */}
       <div className="hidden lg:flex w-1/2 relative items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 to-black" />
         <div className="absolute w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl -top-20 -right-20" />

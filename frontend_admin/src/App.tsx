@@ -6,9 +6,7 @@ import LoginPage from './pages/login';
 import CategoryList from './pages/CategoryList';
 import AddRestaurant from './pages/AddRestaurant';
 import ActiveOrders from './pages/ActiveOrders';
-
-// 🌟 YENİ: Dashboard'u kendi dosyasından import ediyoruz!
-// (Dosya yolunun src/pages/Dashboard.tsx olduğunu varsayarak)
+import RegisterPage from './pages/RegisterPage';
 import Dashboard from './pages/Dashboard'; 
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -27,6 +25,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
         <Route 
           path="/" 
@@ -36,9 +35,7 @@ function App() {
             </ProtectedRoute>
           }
         >
-          {/* 🌟 YENİ: Ana sayfa açıldığında doğrudan Dashboard bileşeni yüklenecek */}
           <Route index element={<Dashboard />} />
-
           <Route path="products" element={<ProductList />} />
           <Route path="add-restaurant" element={<AddRestaurant />} />
           <Route path="categories" element={<CategoryList />} />

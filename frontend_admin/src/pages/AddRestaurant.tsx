@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { createRestaurant, type CreateRestaurantRequest } from '../services/restaurantService';
+import React, { useState, useEffect } from 'react';
+import { createRestaurant, getRestaurant, updateRestaurant, type CreateRestaurantRequest } from '../services/restaurantService';
 import { Store, MapPin, Phone, Hash } from 'lucide-react';
 
 const AddRestaurant: React.FC = () => {
@@ -10,8 +10,43 @@ const AddRestaurant: React.FC = () => {
     phoneNumber: '',
     tableCount: 0
   });
+  
   const [loading, setLoading] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true); 
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [restaurantId, setRestaurantId] = useState<string | null>(null);
+  
   const [message, setMessage] = useState<{type: 'success' | 'error', text: string} | null>(null);
+
+  useEffect(() => {
+    const fetchExistingRestaurant = async () => {
+      try {
+        const currentRestaurantId = localStorage.getItem('restaurantId');
+
+        if (currentRestaurantId && currentRestaurantId !== 'undefined') {
+          setRestaurantId(currentRestaurantId);
+          setIsEditMode(true);
+          
+          const existingData = await getRestaurant(currentRestaurantId);
+          if (existingData) {
+            setFormData({
+              name: existingData.name || '',
+              branchInfo: existingData.branchInfo || '',
+              address: existingData.address || '',
+              phoneNumber: existingData.phoneNumber || '',
+              tableCount: existingData.tableCount || 0
+            });
+          }
+        }
+      } catch (error) {
+        console.error("Restoran bilgileri çekilemedi", error);
+      } finally {
+        setInitialLoad(false);
+      }
+    };
+
+    fetchExistingRestaurant();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -27,15 +62,29 @@ const AddRestaurant: React.FC = () => {
     setMessage(null);
 
     try {
-      await createRestaurant(formData);
-      setMessage({ type: 'success', text: 'Restoran ve masalar başarıyla oluşturuldu! 🎉' });
-      // İsteğe bağlı: Formu sıfırlayabilirsin
+      if (isEditMode && restaurantId) {
+        await updateRestaurant(restaurantId, formData);
+        setMessage({ type: 'success', text: 'Restoran bilgileri başarıyla güncellendi! ✨' });
+      } else {
+        const response = await createRestaurant(formData);
+        
+        if (response && response.restaurantId) {
+           localStorage.setItem('restaurantId', response.restaurantId);
+           setRestaurantId(response.restaurantId);
+           setIsEditMode(true);
+        }
+        setMessage({ type: 'success', text: 'Restoran ve masalar başarıyla oluşturuldu! 🎉' });
+      }
     } catch (error: any) {
-      setMessage({ type: 'error', text: error.message });
+      setMessage({ type: 'error', text: error.message || 'Bir hata oluştu.' });
     } finally {
       setLoading(false);
     }
   };
+
+  if (initialLoad) {
+    return <div className="p-8 text-center font-medium text-gray-500">Restoran bilgileri yükleniyor...</div>;
+  }
 
   return (
     <div className="p-8 max-w-2xl mx-auto">
@@ -45,8 +94,12 @@ const AddRestaurant: React.FC = () => {
             <Store className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900">Restoran Bilgileri</h2>
-            <p className="text-sm text-gray-500">Sisteme yeni bir restoran ve masa düzeni ekleyin.</p>
+            <h2 className="text-xl font-bold text-gray-900">
+              {isEditMode ? 'Restoran Bilgilerini Güncelle' : 'Restoran Bilgileri'}
+            </h2>
+            <p className="text-sm text-gray-500">
+              {isEditMode ? 'Mevcut restoran bilgilerinizi buradan düzenleyebilirsiniz.' : 'Sisteme yeni bir restoran ve masa düzeni ekleyin.'}
+            </p>
           </div>
         </div>
 
@@ -81,7 +134,7 @@ const AddRestaurant: React.FC = () => {
               <input 
                 required
                 type="number" min="0" name="tableCount" value={formData.tableCount} onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black outline-none"
+                className={`w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black outline-none ${isEditMode ? 'bg-gray-50 text-gray-500' : ''}`}
                 placeholder="Örn: 15"
               />
             </div>
@@ -110,7 +163,7 @@ const AddRestaurant: React.FC = () => {
             disabled={loading}
             className="w-full py-3 px-4 bg-black text-white font-medium rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 mt-4"
           >
-            {loading ? 'Kaydediliyor...' : 'Restoranı Kaydet ve Masaları Oluştur'}
+            {loading ? 'İşleniyor...' : (isEditMode ? 'Değişiklikleri Kaydet' : 'Restoranı Kaydet ve Masaları Oluştur')}
           </button>
         </form>
       </div>

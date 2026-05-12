@@ -4,21 +4,21 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Noir.Domain.Entities;
 using Noir.Infrastructure.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Noir.API.Controllers
 {
-
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
     public class RestaurantController : ControllerBase
     {
-       private readonly NoirDbContext _context;
+        private readonly NoirDbContext _context;
 
-       public RestaurantController(NoirDbContext context)
-       {
+        public RestaurantController(NoirDbContext context)
+        {
             _context = context;
-       }
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateRestaurant([FromBody] CreateRestaurantRequest request)
@@ -27,7 +27,7 @@ namespace Noir.API.Controllers
 
             if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out Guid ownerId))
             {
-                return Unauthorized(new {message = "Geçersiz veya eksik kimlik bilgisi"});
+                return Unauthorized(new { message = "Geçersiz veya eksik kimlik bilgisi" });
             }
 
             var restaurant = new Restaurant
@@ -45,7 +45,8 @@ namespace Noir.API.Controllers
                 {
                     restaurant.Tables.Add(new Table
                     {
-                        Name = $"Masa {i}", 
+                        Name = $"Masa {i}",
+                        TableNo = i.ToString(), 
                         IsActive = true
                     });
                 }
@@ -55,7 +56,39 @@ namespace Noir.API.Controllers
             await _context.SaveChangesAsync();
 
             return StatusCode(201, new { message = "Restoran başarıyla oluşturuldu.", restaurantId = restaurant.Id });
+        }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateRestaurant(Guid id, [FromBody] CreateRestaurantRequest request)
+        {
+            var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userIdString) || !Guid.TryParse(userIdString, out Guid ownerId))
+            {
+                return Unauthorized(new { message = "Geçersiz veya eksik kimlik bilgisi" });
+            }
+
+            var restaurant = await _context.Restaurants.FindAsync(id);
+
+            if (restaurant == null)
+            {
+                return NotFound(new { message = "Restoran bulunamadı." });
+            }
+
+            if (restaurant.OwnerId != ownerId)
+            {
+                return Forbid();
+            }
+
+            restaurant.Name = request.Name;
+            restaurant.BranchInfo = request.BranchInfo;
+            restaurant.Address = request.Address;
+            restaurant.PhoneNumber = request.PhoneNumber;
+
+            _context.Restaurants.Update(restaurant);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Restoran bilgileri başarıyla güncellendi." });
         }
 
 
@@ -63,21 +96,24 @@ namespace Noir.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetRestaurant(Guid id)
         {
-            var restaurant = await _context.Restaurants.FindAsync(id);
+            var restaurant = await _context.Restaurants
+                .Include(r => r.Tables)
+                .FirstOrDefaultAsync(r => r.Id == id);
 
             if (restaurant == null)
             {
-                return NotFound("Restoran bulunamadı.");
+                return NotFound(new { message = "Restoran bulunamadı." });
             }
 
             return Ok(new
             {
                 Id = restaurant.Id,
-                Name = restaurant.Name,
-                Location = restaurant.Address 
+                name = restaurant.Name, 
+                branchInfo = restaurant.BranchInfo,
+                address = restaurant.Address,
+                phoneNumber = restaurant.PhoneNumber,
+                tableCount = restaurant.Tables?.Count ?? 0
             });
         }
-
     }
-
 }

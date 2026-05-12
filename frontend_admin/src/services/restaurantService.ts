@@ -1,4 +1,7 @@
-const API_URL = 'https://localhost:7057/api'; 
+import axios from 'axios';
+
+// Backend portunun 7057 olduğundan emin ol
+const API_URL = 'https://localhost:7057/api/Restaurant';
 
 export interface CreateRestaurantRequest {
   name: string;
@@ -8,22 +11,29 @@ export interface CreateRestaurantRequest {
   tableCount: number;
 }
 
-export const createRestaurant = async (data: CreateRestaurantRequest) => {
+const getAuthHeaders = () => {
   const token = localStorage.getItem('token');
-  
-  const response = await fetch(`${API_URL}/Restaurant`, {
-    method: 'POST',
+  return {
     headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  });
+      Authorization: `Bearer ${token}`
+    }
+  };
+};
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || 'Restoran oluşturulamadı.');
-  }
-  
-  return response.json();
+// 🌟 1. Yeni Restoran Oluştur
+export const createRestaurant = async (data: CreateRestaurantRequest) => {
+  const response = await axios.post(API_URL, data, getAuthHeaders());
+  return response.data;
+};
+
+// 🌟 2. İŞTE VITE'IN BULAMADIĞI O FONKSİYON: Restoran Bilgilerini Getir
+export const getRestaurant = async (id: string) => {
+  const response = await axios.get(`${API_URL}/${id}`);
+  return response.data;
+};
+
+// 🌟 3. Restoran Bilgilerini Güncelle
+export const updateRestaurant = async (id: string, data: CreateRestaurantRequest) => {
+  const response = await axios.put(`${API_URL}/${id}`, data, getAuthHeaders());
+  return response.data;
 };
