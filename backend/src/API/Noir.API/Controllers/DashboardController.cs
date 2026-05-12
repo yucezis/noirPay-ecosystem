@@ -1,42 +1,56 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.EntityFrameworkCore;
+using Noir.Infrastructure.Contexts;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Noir.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class DashboardController : ControllerBase
     {
-        // GET: api/<DashboardController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly NoirDbContext _context;
+
+        public DashboardController(NoirDbContext context)
         {
-            return new string[] { "value1", "value2" };
+            _context = context;
         }
 
-        // GET api/<DashboardController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("summary")]
+        public async Task<IActionResult> GetDashboardSummary()
         {
-            return "value";
-        }
+            // 🌟 ÇÖZÜM: PostgreSQL'in hata vermemesi için tarihlerin UTC olduğunu açıkça belirtiyoruz.
+            var now = DateTime.UtcNow;
+            var today = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0, DateTimeKind.Utc);
+            var startOfMonth = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
 
-        // POST api/<DashboardController>
-        [HttpPost]
-        public void Post([FromBody]string value)
-        {
-        }
+            // Günlük Ciro
+            decimal dailyRevenue = await _context.Orders
+                .Where(o => o.CreatedAt >= today)
+                .SumAsync(o => (decimal?)o.PaidAmount) ?? 0;
 
-        // PUT api/<DashboardController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+            // Aylık Ciro
+            decimal monthlyRevenue = await _context.Orders
+                .Where(o => o.CreatedAt >= startOfMonth)
+                .SumAsync(o => (decimal?)o.PaidAmount) ?? 0;
 
-        // DELETE api/<DashboardController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            // Bugünkü Adisyon
+            int totalOrdersToday = await _context.Orders
+                .CountAsync(o => o.CreatedAt >= today);
+
+            // Dolu Masalar
+            int activeTablesCount = await _context.Tables
+                .CountAsync(t => t.Orders.Any(o => o.IsActive));
+
+            return Ok(new
+            {
+                dailyRevenue = dailyRevenue,
+                monthlyRevenue = monthlyRevenue,
+                totalOrdersToday = totalOrdersToday,
+                activeTablesCount = activeTablesCount
+            });
         }
     }
 }
